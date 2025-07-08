@@ -1,30 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/08 18:07:00 by wcapt             #+#    #+#             */
-/*   Updated: 2025/07/08 19:46:43 by wcapt            ###   ########.fr       */
+/*   Created: 2025/07/08 18:58:52 by wcapt             #+#    #+#             */
+/*   Updated: 2025/07/08 18:59:13 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philosophers.h"
+#include "includes/libft.h"
 
-int	main(int argc, char **argv)
+long	ft_atol(const char *str)
 {
-	t_infos	infos;
+	int		i;
+	int		sign;
+	long	result;
 
-	if (argc == 5 || argc == 6)
+	i = 0;
+	sign = 1;
+	result = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (!parse(argv))
-			return (printf("\033[31mInput pas OK \033[0m\n"), 1);
-		if (!init_all(&infos, argv))
-			return (printf("\033[31mInit fail \033[0m\n"), 1);
-		// Solve
-		// Free
-		return (printf("\033[32mInput OK \033[0m\n"), 0);
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	return (printf("\033[31mInput pas OK \033[0m\n"), 1);
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
 }

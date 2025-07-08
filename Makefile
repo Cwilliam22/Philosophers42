@@ -6,12 +6,12 @@
 #    By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 11:49:11 by wcapt             #+#    #+#              #
-#    Updated: 2025/05/27 17:07:50 by wcapt            ###   ########.fr        #
+#    Updated: 2025/07/08 19:39:35 by wcapt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Nom des exécutables
-NAME = exec
+NAME = philo
 
 # Compilateur et flags
 CC = cc
@@ -23,7 +23,7 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # Fichiers sources
-SRC = 	$(SRC_DIR)/main.c 
+SRC = 	$(SRC_DIR)/main.c $(SRC_DIR)/parse.c $(SRC_DIR)/init.c
 
 # Fichiers objets
 OBJ = $(SRC:.c=.o)
@@ -41,8 +41,8 @@ $(NAME): $(OBJ) $(LIBFT)
 	@echo "\033[32m   / /_/ / __ \/ / / __ \/ ___/ __ \/ __ \/ __ \/ _ \/ ___/ ___/\033[0m"
 	@echo "\033[32m  / ____/ / / / / / /_/ (__  ) /_/ / /_/ / / / /  __/ /  (__  ) \033[0m"
 	@echo "\033[32m /_/   /_/ /_/_/_/\____/____/\____/ .___/_/ /_/\___/_/  /____/  \033[0m"
-	@echo "\033[32m									/_/							   \033[0m"
-	@echo "\033[32m exec compiled successfully!\033[0m"                                                
+	@echo "\033[32m                                 /_/                            \033[0m"
+	@echo "\033[32m philo compiled successfully!\033[0m"                                                
 
 $(SRC_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
