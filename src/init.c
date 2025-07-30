@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/07/08 19:47:15 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/07/30 01:04:01 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,7 @@ int	init_all(t_infos *infos, char **argv)
 	infos->time_to_sleep = ft_atol(argv[4]);
 	if (argv[5] != NULL)
 		infos->number_of_meals = ft_atol(argv[5]);
+	else
+		infos->number_of_meals = -1;
 	return (1);
 }

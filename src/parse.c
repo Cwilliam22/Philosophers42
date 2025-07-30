@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:09:20 by wcapt             #+#    #+#             */
-/*   Updated: 2025/07/08 19:47:49 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/07/30 01:06:15 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	not_max_or_min(char **argv)
 	long int	number;
 	int			i;
 
-	i = 0;
+	i = 1;
 	while (argv[i])
 	{
 		number = ft_atol(argv[i]);
