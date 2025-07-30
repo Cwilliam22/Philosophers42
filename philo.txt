@@ -5,42 +5,42 @@ Il y a un nombre N de philo dans le problème.
 Chaque philo possède un ID (pour se repérer).
 
 3 états :
-    - pense
-    - affamé
-    - mange 
+	- pense
+	- affamé
+	- mange 
 
 Résolution par sémaphores
 
 C'est un sémaphore ???
 
-    -> Un sémaphore est une variable spéciale utilisée en 
-    programmation concurrente (notamment dans les systèmes 
-    d’exploitation) pour gérer l'accès à des ressources 
-    partagées par plusieurs processus ou threads, et éviter 
-    les conflits d’accès (comme les conditions de course ou 
-    les deadlocks).
+	-> Un sémaphore est une variable spéciale utilisée en 
+	programmation concurrente (notamment dans les systèmes 
+	d’exploitation) pour gérer l'accès à des ressources 
+	partagées par plusieurs processus ou threads, et éviter 
+	les conflits d’accès (comme les conditions de course ou 
+	les deadlocks).
 
 Concrètement, un sémaphore sert à :
 
-    - Coordonner l’utilisation d’une ressource limitée (par exemple, 
-    un seul accès à une imprimante ou une fourchette dans le 
-    problème des philosophes).
+	- Coordonner l’utilisation d’une ressource limitée (par exemple, 
+	un seul accès à une imprimante ou une fourchette dans le 
+	problème des philosophes).
 
-    - Empêcher que plusieurs processus accèdent simultanément à une 
-    ressource si cela peut causer un conflit.
+	- Empêcher que plusieurs processus accèdent simultanément à une 
+	ressource si cela peut causer un conflit.
 
-    - Attendre qu’une ressource soit disponible.
+	- Attendre qu’une ressource soit disponible.
 
 Deux types de sémaphores :
 
-    - Sémaphore binaire (aussi appelé mutex) :
-        -> Ne prend que deux valeurs : 0 (occupé) ou 1 (libre).
-        -> Utilisé pour l'exclusion mutuelle (accès unique à une 
-            ressource à la fois).
-    - Sémaphore comptable (ou général) :
-        -> Peut prendre n’importe quelle valeur entière positive.
-        -> Utilisé quand plusieurs unités d’une même ressource 
-            sont disponibles (ex : 3 fourchettes pour 5 philosophes).
+	- Sémaphore binaire (aussi appelé mutex) :
+		-> Ne prend que deux valeurs : 0 (occupé) ou 1 (libre).
+		-> Utilisé pour l'exclusion mutuelle (accès unique à une 
+			ressource à la fois).
+	- Sémaphore comptable (ou général) :
+		-> Peut prendre n’importe quelle valeur entière positive.
+		-> Utilisé quand plusieurs unités d’une même ressource 
+			sont disponibles (ex : 3 fourchettes pour 5 philosophes).
 
 Mutex explication : 
 
@@ -59,15 +59,77 @@ Caractéristiques des mutex ???
 
 Autres définitions : 
 
-    - Programmation concurrente : est une manière de concevoir 
-    des programmes où plusieurs tâches peuvent s'exécuter en même 
-    temps (ou de manière entrelacée), souvent pour améliorer la 
-    réactivité ou les performances.
+	- Programmation concurrente : est une manière de concevoir 
+	des programmes où plusieurs tâches peuvent s'exécuter en même 
+	temps (ou de manière entrelacée), souvent pour améliorer la 
+	réactivité ou les performances.
 
-    - Thread : Un thread (ou fil d'exécution) est une unité 
-    d'exécution légère à l’intérieur d’un programme. Un programme 
-    peut avoir plusieurs threads qui s’exécutent en parallèle.
+	- Thread : Un thread (ou fil d'exécution) est une unité 
+	d'exécution légère à l’intérieur d’un programme. Un programme 
+	peut avoir plusieurs threads qui s’exécutent en parallèle.
 
-    - Deadlock : Un deadlock est une situation où plusieurs 
-    threads ou processus attendent indéfiniment une ressource 
-    détenue par un autre, et aucun ne peut continuer. 
+	- Deadlock : Un deadlock est une situation où plusieurs 
+	threads ou processus attendent indéfiniment une ressource 
+	détenue par un autre, et aucun ne peut continuer. 
+
+
+Thread
+Utilise pour booster les performances d'un programme.
+On repartit diffrentes taches entre differents thread pour etre plus efficace.
+Un bon programme doit etre multi thread s'il veut etre rapide/performant/bon.
+
+Les threads d’un même processus partagent le même espace mémoire 
+(contrairement aux processus, qui ont chacun leur propre mémoire séparée).
+
+Cela permet aux threads de s’échanger des données facilement et d’accéder aux 
+mêmes variables/mémoire sans coût supplémentaire (puisqu’ils sont dans le même 
+espace mémoire).
+
+L’IPC (communication entre processus) est donc beaucoup plus simple entre threads,
+parce qu’ils peuvent accéder directement aux mêmes données.
+
+Mais ! Le problème compliqué, ce n’est pas de partager les données, c’est de
+synchroniser correctement les accès pour éviter les conflits (conditions de
+course, incohérences, etc.).
+
+Exemple :
+Une personne pour tenir un restaurant est moins efficace qu'une equipe avec
+chacun une tache assigne.
+
+Un thread fonctionne comme un micro-process dans le process lui-meme.
+
+Preparer la mise en place des thread dans notre programme en C :
+
+#include <pthread.h>
+
+Pour creer un thread :
+	pthread_t my_thread;
+		-> pthread_t est generalement un unsigned long
+	int status = pthread_create(&my_thread, NULL, my_function, NULL);
+
+Chaque thread a un identifiant unique.
+Important pour manager les threads.
+pthread_t represents the ID of a thread in UNIX-like systems.
+
+---------------------------------EXEMPLE-----------------------------------
+	#include <stdio.h>
+	#include <pthread.h>
+
+	void *print_thread_id(void *tid) 
+	{
+		printf("Thread ID: %lu\n", *(pthread_t *)tid);
+		return NULL;
+	}
+
+	int main() {
+		pthread_t thread1, thread2;
+		pthread_create(&thread1, NULL, print_thread_id, &thread1);
+		pthread_create(&thread2, NULL, print_thread_id, &thread2);
+
+		pthread_join(thread1, NULL);
+		pthread_join(thread2, NULL);
+
+	}
+---------------------------------------------------------------------------
+
+A quoi sert la fonction pthread_join
