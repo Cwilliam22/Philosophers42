@@ -134,9 +134,9 @@ pthread_t represents the ID of a thread in UNIX-like systems.
 Fonction pthread_create() :
 
 int pthread_create(pthread_t *thread,
-                   const pthread_attr_t *attr,
-                   void *(*start_routine)(void *),
-                   void *arg);
+				   const pthread_attr_t *attr,
+				   void *(*start_routine)(void *),
+				   void *arg);
 
 pthread_t *thread : pointeur vers un identifiant de thread
 	-> l'ID du thread
@@ -168,4 +168,198 @@ On peut obtenir la l'ID en utilisant la fonction pthread_self().
 
 Fonction pthread_self() :
 
+
+---------------------------------EXEMPLE-----------------------------------
+
+#include <pthread.h>
+#include <stdio.h>
+#include <unistd.h>
+
+void *make_coffee(void *arg)
+{
+ printf("Making coffee...\n");
+ sleep(2);
+ printf("Coffee ready!\n");
+ return (NULL);
+}
+
+void *make_pastry(void *arg)
+{
+ printf("Baking pastry...\n");
+ sleep(3);
+ printf("Pastry ready!\n");
+ return (NULL);
+}
+
+int main(void)
+{
+ pthread_t coffee_thread;
+ pthread_t pastry_thread;
+
+ pthread_create(&coffee_thread, NULL, make_coffee, NULL);
+ pthread_create(&pastry_thread, NULL, make_pastry, NULL);
+ 
+ //Before handing the order to customer, i nees to WAIT both threads
+ pthread_join(coffee_thread, NULL);
+ pthread_join(pastry_thread, NULL);
+ 
+ printf("\n\n\tThx for coming to Starbucks!\n"
+	 "\there's the ☕️ 'n 🥐\n\n\n");
+ return (0);
+}
+---------------------------------------------------------------------------
+
+Thread = une « mini-exécution » à l’intérieur d’un processus, qui peut tourner 
+en parallèle avec d’autres threads.
+Chaque thread a une fonction d’entrée (comme un main pour lui tout seul).
+	
+	pthread_create(...) -> permet de créer un thread.
+	
+	Arguments
+	- Une variable de type pthread_t (l’identifiant du thread),
+	- Des options (souvent NULL),
+	- La fonction que le thread exécutera,
+	- Un argument pour cette fonction (ou NULL).
+
+	pthread_t = identifiant du thread (opaque, ne pas supposer que c’est un simple 
+	unsigned long, même si c’est souvent le cas).
+
+	pthread_self() = permet à un thread de connaître son propre ID.
+
+	pthread_join(thread, NULL) = dit au programme : « Attend que ce thread finisse avant de continuer ».
+		-> C’est l’équivalent de wait() mais pour les threads.
+		-> Ce n’est pas un outil pour définir l’ordre d’exécution, juste un moyen 
+		de synchroniser et s’assurer qu’un thread est terminé avant de passer à la suite.
+		-> pthread_join() n’influence pas la priorité ni l’ordre d’exécution des threads.
+		-> outils de synchronisation
+
+Dans l'exemple, comme les tâches sont très simples et seulement différenciées par un sleep, 
+celui qui dort moins finira avant et donc son printf sortira plus tôt.
+
+Mais dans un vrai programme, le temps de fin dépendra :
+
+	- de la charge CPU
+	- de l’OS
+	- du moment où le thread est planifié
+	- du code qu’il exécute
+
+---------------------------------EXEMPLE-----------------------------------
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int x = 42;
+int main()
+{
+	pid_t pid = fork(); // Creates a new process
+  // child
+	if (0 == pid)
+	{
+		x++;
+		printf("Child process: Value of x = %d\\n", x);
+	}
+  //parent
+	else
+	{
+		wait(NULL); // Wait for child to finish
+		printf("Parent process: Value of x = %d\\n", x);
+	}
+}
+---------------------------------------------------------------------------
+
+Resultat : 
+Child process: Value of x = 43
+Parent process: Value of x = 42
+
+
+---------------------------------EXEMPLE-----------------------------------
+
+#include <stdio.h>
+#include <pthread.h>
+#include <unistd.h>
+
+int x = 42;
+void *thread_task(void *arg)
+{
+	++x;
+	printf("Thread: Value of x = %d\\n", x);
+	return NULL;
+}
+int main()
+{
+	pthread_t thread1, thread2;
+	pthread_create(&thread1, NULL, thread_task, NULL);
+	pthread_create(&thread2, NULL, thread_task, NULL);
+	pthread_join(thread1, NULL);
+	pthread_join(thread2, NULL);
+	return 0;
+}
+
+---------------------------------------------------------------------------
+
+Resultat :
+Thread: Value of x = 43
+Thread: Value of x = 44
+
+Deux exemples qui montre la difference entre les process et les threads.
+Les process fonctionenent chacun de leur cote (leur propre data, leur propre memoire, etc).
+Les thread partage tout !!!
+
+Sur la memoire :
+	(Processus)
+		- A sa propre mémoire isolée (code, données, pile).
+		- Les variables globales ne sont pas partagées entre processus.
+		- Si un processus fils modifie une variable, le père ne le voit pas.
+		- Exemple : fork() → le père et le fils ont chacun leur copie de x.
+
+	(Threads)
+		- Partagent le même espace mémoire dans un processus.
+		- Les variables globales sont communes à tous les threads.
+		- Si un thread modifie x, tous les autres voient le changement.
+
+Sur l'ID et le PID:
+	Chaque process a un PID unique.
+	Tout les threads dans un process partagent le meme PID.
+		-> Chaque process possede aussi son propre ID.
+
+---------------------------------EXEMPLE-----------------------------------
+
+#include <pthread.h>
+#include <unistd.h>
+#include <stdio.h>
+
+// This function represents the routine (task) our workers (threads) will execute.
+void *worker_routine(void *arg)
+{
+	// All workers (threads) inside the factory (process) will print the same address (PID)
+	printf("Worker ID->%lu: My factory's address (PID) is %d\\n", pthread_self(), getpid());
+	return (NULL);
+}
+int main(void)
+{
+	pthread_t worker1;
+	pthread_t worker2;
+	// Let's create two workers (threads) in the same factory (process).
+	// Hiring (creating) the first worker.
+	if (pthread_create(&worker1, NULL, worker_routine, NULL) != 0)
+		return (1);
+	// Hiring (creating) the second worker.
+	if (pthread_create(&worker2, NULL, worker_routine, NULL) != 0)
+		return (2);
+	// Wait for both workers to finish their shift (tasks).
+	pthread_join(worker1, NULL);
+	pthread_join(worker2, NULL);
+	return (0);
+}
+
+---------------------------------------------------------------------------
+
+Sur la communication :
+
+	(Processus)
+		- Nécessite des mécanismes spéciaux (IPC) : pipes, sockets, mémoire partagée.
+	(Threads)
+		- Communication simple car même mémoire.
+		- Risque de corruption de données si accès simultané non contrôlé → mutex/semaphores obligatoires pour éviter les race conditions.
 
