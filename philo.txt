@@ -131,5 +131,41 @@ pthread_t represents the ID of a thread in UNIX-like systems.
 
 	}
 ---------------------------------------------------------------------------
+Fonction pthread_create() :
 
-A quoi sert la fonction pthread_join
+int pthread_create(pthread_t *thread,
+                   const pthread_attr_t *attr,
+                   void *(*start_routine)(void *),
+                   void *arg);
+
+pthread_t *thread : pointeur vers un identifiant de thread
+	-> l'ID du thread
+const pthread_attr_t *attr : attributs du thread
+	-> généralement NULL (valeurs par défaut)
+void *(*start_routine)(void *) : pointeur vers la fonction du thread
+	-> fonction qui sera exécuter par le thread
+void *arg : argument à passer à start_routine
+
+À quoi sert la fonction pthread_creat() ???
+-> Sert à créer/démarrer un nouveau thread dans le programme
+
+Fonction pthread_join() :
+
+int pthread_join(pthread_t thread, void **retval);
+
+pthread_t thread : identifiant du thread
+void **retval : pointeur vers la valeur de retour du thread	
+
+À quoi sert la fonction pthread_join() ???
+-> Attend que le thread ciblé par thread finisse son exécution
+-> Optionnellement récupère ce que le thread a retourné via return (un void *)
+-> Bloque le thread appelant (souvent main()) jusqu’à ce que l’autre thread soit terminé
+-> Nettoie automatiquement les ressources du thread (équivalent d’un free de thread)
+
+Ces deux fonctions utilisent le ID pour manager ces thread.
+
+On peut obtenir la l'ID en utilisant la fonction pthread_self().
+
+Fonction pthread_self() :
+
+
