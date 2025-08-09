@@ -413,3 +413,48 @@ int main(void)
 }
 
 ---------------------------------------------------------------------------
+
+Mutex
+
+Sans protection, deux threads peuvent :
+
+	- Lire la même valeur de la variable partagée (g_drinks_served).
+	- Faire leur travail.
+	- Écrire la même valeur mise à jour -> une mise à jour est perdue (race condition).
+
+Face à ce problème de race condition les Mutex sont la solution.
+
+Évite les race conditions → les données sont correctes même avec plusieurs threads.
+
+Mutex = MUTual EXclusion = verrou qui ne laisse passer qu’un seul thread à
+la fois dans la section critique (l’endroit où on modifie la ressource partagée).
+
+Quand un thread verrouille le mutex (pthread_mutex_lock), les autres qui veulent
+aussi l’utiliser attendent.
+Quand il a fini, il libère le verrou (pthread_mutex_unlock) -> un autre thread
+peut entrer.
+
+Fonctionnement dans le code ???
+
+	- pthread_mutex_t mutex;
+		le verrou global
+
+	- pthread_mutex_lock(&mutex);
+		prend la clé → personne d’autre ne peut modifier la variable
+
+	- g_drinks_served++;
+		section critique : modif de la variable
+
+	- pthread_mutex_unlock(&mutex);
+		rend la clé
+
+Cycle de vie du mutex
+Initialisation : pthread_mutex_init(&mutex, NULL) (avant utilisation).
+Utilisation : pthread_mutex_lock / pthread_mutex_unlock autour des sections critiques.
+Destruction : pthread_mutex_destroy(&mutex) (à la fin pour éviter les fuites mémoire).
+
+Inconvénients -> Coût en performance
+	-> Chaque lock et unlock prend un peu de temps.
+	-> Si un thread met longtemps à libérer le verrou, les autres doivent 
+	attendre -> ralentissement du programme.
+

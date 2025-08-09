@@ -1,0 +1,10 @@
+
+(pthread.h)
+
+- pthread_create(&my_thread, NULL, my_function, NULL);
+- pthread_join(thread1, NULL);
+- pthread_self();
+- pthread_mutex_lock(&mutex);
+- pthread_mutex_unlock(&mutex);
+- pthread_mutex_init(&mutex, NULL);
+pthread_mutex_destroy(&mutex);
