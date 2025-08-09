@@ -1,78 +1,3 @@
-
-The dinning philosophers problem
-
-Il y a un nombre N de philo dans le problème.
-Chaque philo possède un ID (pour se repérer).
-
-3 états :
-	- pense
-	- affamé
-	- mange 
-
-Résolution par sémaphores
-
-C'est un sémaphore ???
-
-	-> Un sémaphore est une variable spéciale utilisée en 
-	programmation concurrente (notamment dans les systèmes 
-	d’exploitation) pour gérer l'accès à des ressources 
-	partagées par plusieurs processus ou threads, et éviter 
-	les conflits d’accès (comme les conditions de course ou 
-	les deadlocks).
-
-Concrètement, un sémaphore sert à :
-
-	- Coordonner l’utilisation d’une ressource limitée (par exemple, 
-	un seul accès à une imprimante ou une fourchette dans le 
-	problème des philosophes).
-
-	- Empêcher que plusieurs processus accèdent simultanément à une 
-	ressource si cela peut causer un conflit.
-
-	- Attendre qu’une ressource soit disponible.
-
-Deux types de sémaphores :
-
-	- Sémaphore binaire (aussi appelé mutex) :
-		-> Ne prend que deux valeurs : 0 (occupé) ou 1 (libre).
-		-> Utilisé pour l'exclusion mutuelle (accès unique à une 
-			ressource à la fois).
-	- Sémaphore comptable (ou général) :
-		-> Peut prendre n’importe quelle valeur entière positive.
-		-> Utilisé quand plusieurs unités d’une même ressource 
-			sont disponibles (ex : 3 fourchettes pour 5 philosophes).
-
-Mutex explication : 
-
-Les mutex (MUTual EXclusion) sont utilisé pour protèger des ressources/donnés 
-contre un acces en simultané.
-
-Exemple : Une seule clef peut rentrer dans la serrure à l'instant T.
-
-Sana mutex il y aurait des valeurs fausses, des bugs et pleins 
-d'autres comportemeent impévisible.
-
-Acces d'un thread ou d'un process par le biaie du mutex. Le thread ou le processus
-modifie la ressource. Puis libère le mutex pour qu'un autre thread puisse y accéder.
-Protéger la partie du code qui contient la ressource en utilisant un mutex.
-Caractéristiques des mutex ???
-
-Autres définitions : 
-
-	- Programmation concurrente : est une manière de concevoir 
-	des programmes où plusieurs tâches peuvent s'exécuter en même 
-	temps (ou de manière entrelacée), souvent pour améliorer la 
-	réactivité ou les performances.
-
-	- Thread : Un thread (ou fil d'exécution) est une unité 
-	d'exécution légère à l’intérieur d’un programme. Un programme 
-	peut avoir plusieurs threads qui s’exécutent en parallèle.
-
-	- Deadlock : Un deadlock est une situation où plusieurs 
-	threads ou processus attendent indéfiniment une ressource 
-	détenue par un autre, et aucun ne peut continuer. 
-
-
 Thread
 Utilise pour booster les performances d'un programme.
 On repartit diffrentes taches entre differents thread pour etre plus efficace.
@@ -361,5 +286,130 @@ Sur la communication :
 		- Nécessite des mécanismes spéciaux (IPC) : pipes, sockets, mémoire partagée.
 	(Threads)
 		- Communication simple car même mémoire.
-		- Risque de corruption de données si accès simultané non contrôlé → mutex/semaphores obligatoires pour éviter les race conditions.
+		- Risque de corruption de données si accès simultané non contrôlé → mutex/semaphores 
+		obligatoires pour éviter les race conditions.
 
+Race Condition : 
+
+(Problème)
+Une race condition arrive quand plusieurs threads (ou processus) accèdent en même temps 
+à une ressource partagée et au moins un d’eux la modifie, sans mécanisme pour coordonner 
+cet accès.
+
+En somme nous pouvons avoir à faire à des opérations qui se marchent dessus ou à des données
+qui peuvent être incohérente voir même perdues.
+
+(L’analogie Starbucks)
+Imagine un registre (le ledger) qui contient le nombre total de boissons servies.
+
+Plusieurs serveurs (threads) mettent à jour ce registre en même temps :
+	1. Ils lisent la valeur (ex : 42 boissons).
+	2. Ils retiennent ce nombre dans leur tête (registre CPU).
+	3. Ils servent une boisson.
+	4. Ils écrivent la nouvelle valeur (ancienne valeur + 1) dans le registre.
+
+Si deux serveurs lisent "42" en même temps, puis ajoutent chacun 1, ils écrivent
+tous les deux 43 -> on perd une vente.
+
+Une race condition, c’est comme deux personnes qui écrivent sur le même papier
+en même temps :
+
+Si elles se coordonnent -> OK.
+Si elles écrivent en même temps -> pas OK (les chiffres sont faux).
+
+La solution dans un vrai programme :
+	- Mutex (verrou)
+	- Sémaphores
+	- Verrou atomique (__sync_fetch_and_add, stdatomic.h) pour s’assurer
+	qu’une seule personne écrit à la fois.
+
+-----------------------------------CHATGPT---------------------------------
+
+Explications Chatgpt : 
+
+Comment les threads s’exécutent vraiment : 
+
+- Sur un CPU à un seul cœur**, les threads ne s’exécutent pas littéralement en 
+même temps -> l’OS leur donne la main tour par tour (time slicing).
+- Sur un CPU multi-cœurs, plusieurs threads peuvent vraiment tourner en 
+parallèle (un par cœur ou plus).
+
+Où est le piège ?
+
+Même sur un seul cœur, le problème vient du fait que l’OS peut interrompre un
+thread à n’importe quel moment, y compris en plein milieu d’une opération comme :
+
+	-> g_drinks_served++;
+
+Cette opération semble être une seule action en C, mais en réalité elle se fait
+en plusieurs étapes (LOAD → ADD → STORE).
+Si l’OS coupe un thread après le LOAD, un autre thread peut modifier la variable,
+puis le premier thread reprend avec une valeur périmée -> race condition.
+
+Pourquoi mutex & co existent
+
+Sans protection : deux threads peuvent lire la même valeur en même temps, 
+chacun ajouter 1, et perdre une mise à jour.
+Avec un mutex : on force un système de un seul à la fois » sur la section
+critique (l’endroit où la variable partagée est modifiée).
+
+En gros, mutex = clé du comptoir Starbucks :
+
+- Si un serveur veut mettre à jour le registre, il prend la clé.
+- Les autres attendent qu’il la rende.
+- Résultat → aucun écrasement de valeur.
+
+Les threads semblent travailler « en même temps » grâce au multitâche, mais ils
+peuvent aussi vraiment travailler en parallèle sur plusieurs cœurs.
+Dans les deux cas, sans coordination, ils peuvent se marcher dessus -> d’où 
+l’usage des mutex pour imposer un tour par tour sécurisé.
+
+---------------------------------------------------------------------------
+
+Pour voir ce problème de race condition voici cet exemple suivant à tester :
+COMPILATION to see race
+cc -fsanitize=thread test.c
+
+---------------------------------EXEMPLE-----------------------------------
+
+#include <stdio.h>
+#include <pthread.h>
+
+#define RACE_CONDITION 100000
+// 0 by default
+int g_drinks_served;
+void *serve_drink(void *arg)
+{
+ int i;
+ i = 0;
+ while (i++ < RACE_CONDITION)
+ {
+    //These a 3 machine instructions, LOAD-ADD-STORE
+  //as you saw in assembly, our waiter is slow
+  g_drinks_served++; 
+  
+  /*
+  Scheduler can switch programs whenever it wants
+  1)LOAD    <-
+  2)ADD     <-
+  3)STORE   <-
+    The RACE_CONDITION value is proportional to the Probability of it happening
+  Try to run the code with different values
+  */
+ }
+ return (NULL);
+}
+int main(void)
+{
+ pthread_t waiter1;
+ pthread_t waiter2;
+ 
+ pthread_create(&waiter1, NULL, serve_drink, NULL);
+ pthread_create(&waiter2, NULL, serve_drink, NULL);
+ pthread_join(waiter1, NULL);
+ pthread_join(waiter2, NULL);
+ printf("Total drinks served: %d\\n", g_drinks_served);
+ return (0);
+}
+
+---------------------------------------------------------------------------

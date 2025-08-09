@@ -1,0 +1,73 @@
+The dinning philosophers problem
+
+Il y a un nombre N de philo dans le problème.
+Chaque philo possède un ID (pour se repérer).
+
+3 états :
+	- pense
+	- affamé
+	- mange 
+
+Résolution par sémaphores
+
+C'est un sémaphore ???
+
+	-> Un sémaphore est une variable spéciale utilisée en 
+	programmation concurrente (notamment dans les systèmes 
+	d’exploitation) pour gérer l'accès à des ressources 
+	partagées par plusieurs processus ou threads, et éviter 
+	les conflits d’accès (comme les conditions de course ou 
+	les deadlocks).
+
+Concrètement, un sémaphore sert à :
+
+	- Coordonner l’utilisation d’une ressource limitée (par exemple, 
+	un seul accès à une imprimante ou une fourchette dans le 
+	problème des philosophes).
+
+	- Empêcher que plusieurs processus accèdent simultanément à une 
+	ressource si cela peut causer un conflit.
+
+	- Attendre qu’une ressource soit disponible.
+
+Deux types de sémaphores :
+
+	- Sémaphore binaire (aussi appelé mutex) :
+		-> Ne prend que deux valeurs : 0 (occupé) ou 1 (libre).
+		-> Utilisé pour l'exclusion mutuelle (accès unique à une 
+			ressource à la fois).
+	- Sémaphore comptable (ou général) :
+		-> Peut prendre n’importe quelle valeur entière positive.
+		-> Utilisé quand plusieurs unités d’une même ressource 
+			sont disponibles (ex : 3 fourchettes pour 5 philosophes).
+
+Mutex explication : 
+
+Les mutex (MUTual EXclusion) sont utilisé pour protèger des ressources/donnés 
+contre un acces en simultané.
+
+Exemple : Une seule clef peut rentrer dans la serrure à l'instant T.
+
+Sana mutex il y aurait des valeurs fausses, des bugs et pleins 
+d'autres comportemeent impévisible.
+
+Acces d'un thread ou d'un process par le biaie du mutex. Le thread ou le processus
+modifie la ressource. Puis libère le mutex pour qu'un autre thread puisse y accéder.
+Protéger la partie du code qui contient la ressource en utilisant un mutex.
+Caractéristiques des mutex ???
+
+Autres définitions : 
+
+	- Programmation concurrente : est une manière de concevoir 
+	des programmes où plusieurs tâches peuvent s'exécuter en même 
+	temps (ou de manière entrelacée), souvent pour améliorer la 
+	réactivité ou les performances.
+
+	- Thread : Un thread (ou fil d'exécution) est une unité 
+	d'exécution légère à l’intérieur d’un programme. Un programme 
+	peut avoir plusieurs threads qui s’exécutent en parallèle.
+
+	- Deadlock : Un deadlock est une situation où plusieurs 
+	threads ou processus attendent indéfiniment une ressource 
+	détenue par un autre, et aucun ne peut continuer. 
+
