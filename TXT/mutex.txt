@@ -1,0 +1,213 @@
+
+MUTEX
+
+
+Mutexes VS Spinlocks -> Choosing the Right Locking Mechanism
+
+Mutex et spinlock servent tous les deux à protéger une section 
+critique : une zone de code où une ressource partagée est modifiée.
+
+Leur différence vient de ce qu’un thread fait quand le verrou est déjà pris.
+
+(Mutex)
+Si le verrou est pris → le thread s’endort (passe en attente).
+Il est réveillé seulement quand le verrou est libre.
+
+Avantages :
+	- Pas de CPU gaspillé pendant l’attente.
+	- Plus sûr pour les longues attentes.
+
+Inconvénients :
+	- Coût du passage user → kernel → user (syscall de mise en sommeil/réveil).
+	- Si le verrou est libéré très vite, ce coût peut être plus élevé que le
+	temps de juste attendre.
+
+Analogie :
+C’est comme activer les notifications sur ton téléphone -> tu fais autre chose
+et ton téléphone te réveille seulement si quelque chose arrive.
+
+(Spinlock)
+Si le verrou est pris → le thread boucle en vérifiant (busy waiting) jusqu’à
+ce qu’il soit libre.
+
+Avantages :
+	- Pas de coût de mise en sommeil/réveil.
+	- Peut être plus rapide si le verrou est libéré très vite.
+
+Inconvénients :
+	- Gaspille du CPU pendant qu’il attend.
+	- Sur un CPU monocœur → peut bloquer totalement le détenteur du
+	verrou (qui ne peut pas s’exécuter).
+
+Analogie :
+C’est comme scroller sans arrêt ton fil d’actu en attendant un message -> si ça
+arrive vite, c’est instantané, mais si ça tarde, tu perds ton temps et ta batterie.
+
+Quand utiliser quoi ?
+
+Mutex -> par défaut, surtout si :
+	- L’attente risque d’être longue.
+	- Envie d'économiser du CPU.
+
+Spinlock -> possible si :
+	- L’attente est très courte.
+	- L'uilisation est sur un système multi-cœurs.
+	- Pour éviter le coût de mise en sommeil.
+
+
+Section critique
+
+	(Définition)
+		Partie du code qui accède à une ressource partagée (variable globale,
+		fichier, socket…) et qui ne doit pas être exécutée par plusieurs threads/processus
+		en même temps.
+
+	(Pourquoi c’est critique ???)
+		Si deux threads y entrent en même temps -> risque de race condition et de données 
+		corrompues.
+
+Atomique
+	(Définition) 
+		- Une opération est dite atomique si elle est indivisible.
+		- Soit elle est entièrement exécutée
+		- Soit pas du tout
+		- Et jamais interrompue au milieu
+
+	(Exemple)
+		Un serveur écrit un nouveau chiffre sur le registre en un seul
+		coup de stylo, sans lever la main ni s’arrêter.
+
+Lien entre section critique et atomicité avec un mutex
+	Un mutex ne rend pas les opérations matériellement atomiques -> le CPU exécute
+	toujours la section critique instruction par instruction.
+	Mais, le mutex empêche toute interférence d’autres threads pendant cette période.
+	En somme pour les autres threads, la section semble atomique (vue comme un bloc 
+	unique et indivisible).
+
+
+Implementation de mutex :
+
+- Creer/declarer un mutex
+	pthread_mutex_t my_mutex;
+
+- Initialiser le mutex
+	pthread_mutex_init(&my_mutex, NULL);
+
+- Liberer la memoire / detruire le mutex
+	pthread_mutex_destroy(&my_mutex);
+
+---------------------------------EXEMPLE-----------------------------------
+
+#include <pthread.h>
+
+int main(void)
+{
+	pthread_mutex_t my_mutex;
+	pthread_mutex_init(&my_mutex, NULL);
+	// (...)
+	pthread_mutex_destroy(&my_mutex);
+	return 0;
+}
+
+---------------------------------------------------------------------------
+
+
+
+Commander un café avec toutes les options → c’est un peu plus long, mais tu 
+peux tout personnaliser.
+
+Méthode rapide : initialisation statique
+
+	A utiliser lorsqu'on veut un mutex standard, sans options particulières.
+
+(Syntaxe)
+	pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
+	Pas besoin d’appeler pthread_mutex_init() -> il est prêt directement.
+	La destruction (pthread_mutex_destroy) est optionnelle dans ce cas (mais
+	reste bonne pratique).
+
+	(Pourquoi la destruction du mutex est optionnelle dans ce cas ???)
+
+(Analogie)
+	Dire "Un café noir s’il vous plaît" → plus rapide, pas de personnalisation.
+
+(Avantages)
+	- Simplicité -> pas de fonction d’init.
+	- Rapidité -> juste une affectation.
+	- Code plus court -> plus lisible.
+
+Limitations & erreurs courantes
+	Pas fait pour les tableaux de mutex
+
+---------------------------------EXEMPLE-----------------------------------
+
+
+#include <pthread.h>
+#include <stdio.h>
+
+#define ARRAY_SIZE 5
+
+int main(void)
+{
+	// WRONG approach for initializing an array of mutexes
+	pthread_mutex_t mutexes[ARRAY_SIZE] = PTHREAD_MUTEX_INITIALIZER;
+
+   
+ // this is also wrong
+// PTHREAD_MUTEX_INITIALIZER is for static initialization at compile-time.
+// For dynamic initialization at run-time, use pthread_mutex_init() instead.
+	for (int i = 0; i < ARRAY_SIZE; i++) 
+   {
+		mutexes[i] = PTHREAD_MUTEX_INITIALIZER;
+	}
+
+}
+---------------------------------------------------------------------------
+
+	pthread_mutex_t mutexes[5] = PTHREAD_MUTEX_INITIALIZER;
+		-> Faux
+
+	PTHREAD_MUTEX_INITIALIZER ne marche que pour un seul mutex, pas pour en 
+	initialiser plusieurs à la fois.
+
+	Même répéter PTHREAD_MUTEX_INITIALIZER dans une boucle ne fonctionne pas
+	pour de l’initialisation dynamique.
+
+
+Bonne méthode pour un tableau
+
+---------------------------------EXEMPLE-----------------------------------
+
+#include <pthread.h>
+
+#define THREAD_NUM 10
+
+int main() {
+	pthread_mutex_t mutexes[THREAD_NUM];
+
+	for (int i = 0; i < THREAD_NUM; i++) 
+	{
+		pthread_mutex_init(&mutexes[i], NULL);
+	}
+
+	// ... your code ...
+
+	// Optionally, destroy the mutexes once done
+	for (int i = 0; i < THREAD_NUM; i++)
+	{
+		pthread_mutex_destroy(&mutexes[i]);
+	}
+
+	return 0;
+}
+
+---------------------------------------------------------------------------
+
+(Analogie)
+	Si tu as 5 amis, tu ne commandes pas un seul café noir en espérant qu’il
+	se divise par magie en 5 tasses -> tu commandes 5 cafés séparés.
+
+Règle :
+Utiliser PTHREAD_MUTEX_INITIALIZER pour un mutex simple et unique.
+Pour plusieurs mutex ou besoins spécifiques -> pthread_mutex_init.
+

@@ -71,3 +71,4 @@ Autres définitions :
 	threads ou processus attendent indéfiniment une ressource 
 	détenue par un autre, et aucun ne peut continuer. 
 
+
