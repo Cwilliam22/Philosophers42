@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/07/30 01:04:01 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/08/25 18:21:54 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	init_all(t_infos *infos, char **argv)
 {
-	infos->number_of_philosophers = ft_atol(argv[1]);
+	infos->nb_philo = ft_atol(argv[1]);
 	infos->time_to_die = ft_atol(argv[2]);
 	infos->time_to_eat = ft_atol(argv[3]);
 	infos->time_to_sleep = ft_atol(argv[4]);
