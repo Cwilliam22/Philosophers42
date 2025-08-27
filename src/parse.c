@@ -3,31 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:09:20 by wcapt             #+#    #+#             */
-/*   Updated: 2025/07/30 01:06:15 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/08/26 14:41:23 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-int	valid_unsigned_integer(char **argv)
+static int	valid_integer(char **argv)
 {
 	int	i;
 
 	i = 1;
 	while (argv[i])
 	{
-		printf("argv : %s\n", argv[i]);
 		if (!ft_is_a_number(argv[i]))
+		{
+			print_error_parse("ERROR : ARG ", i, "is not a number\n");
 			return (0);
+		}
 		i++;
 	}
 	return (1);
 }
 
-int	not_max_or_min(char **argv)
+static int	max_or_min(char **argv)
 {
 	long int	number;
 	int			i;
@@ -36,10 +38,12 @@ int	not_max_or_min(char **argv)
 	while (argv[i])
 	{
 		number = ft_atol(argv[i]);
-		if (number > 2147483647)
-			return (0);
-		if (number <= -2147483648)
-			return (0);
+		if (i == 1 && (number < 1 || argv[i] > NB_MAX_PHILO))
+			return (print_error_parse("ERROR : ARG ", i, " > MAX PHILO\n"), 0);
+		if ((number < 0 || number > INT_MAX))
+			return (print_error_parse("ERROR : ARG ", i, " > INT_MAX\n"), 0);
+		if (i != 5 && i != 1 && (number < 1 || number > INT_MAX))
+			return (print_error_parse("ERROR : ARG ", i, "< 0\n"), 0);
 		i++;
 	}
 	return (1);
@@ -47,9 +51,9 @@ int	not_max_or_min(char **argv)
 
 int	parse(char **argv)
 {
-	if (!not_max_or_min(argv))
+	if (!max_or_min(argv))
 		return (0);
-	if (!valid_unsigned_integer(argv))
+	if (!valid_integer(argv))
 		return (0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 #    By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 11:49:11 by wcapt             #+#    #+#              #
-#    Updated: 2025/07/08 19:39:35 by wcapt            ###   ########.fr        #
+#    Updated: 2025/08/26 14:28:57 by wcapt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,9 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # Fichiers sources
-SRC = 	$(SRC_DIR)/main.c $(SRC_DIR)/parse.c $(SRC_DIR)/init.c
+SRC = $(SRC_DIR)/main.c $(SRC_DIR)/parse.c $(SRC_DIR)/init.c \
+		$(SRC_DIR)/free_all.c $(SRC_DIR)/setup_philo.c $(SRC_DIR)/utils.c \
+
 
 # Fichiers objets
 OBJ = $(SRC:.c=.o)
