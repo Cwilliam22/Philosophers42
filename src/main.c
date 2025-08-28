@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:07:00 by wcapt             #+#    #+#             */
-/*   Updated: 2025/08/26 14:44:12 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/08/28 14:42:11 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	main(int argc, char **argv)
 {
 	t_infos	*infos;
-	t_philo	philo;
 
+	infos = malloc(sizeof(*infos));
 	if (argc == 5 || argc == 6)
 	{
 		if (!parse(argv))

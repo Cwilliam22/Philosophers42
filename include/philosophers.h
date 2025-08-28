@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/08/26 14:42:06 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/08/28 14:46:37 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@
 
 typedef struct s_infos
 {
+	size_t		nb_arg;
 	long int	nb_philo;
 	long int	time_to_die;
 	long int	time_to_eat;
 	long int	time_to_sleep;
 	long int	number_of_meals;
-	t_philo			*philo;
+	//t_philo			*philo;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mutex;
 	int				simulation_stop;
@@ -44,14 +45,14 @@ typedef struct s_infos
 
 typedef struct s_philo
 {
-	int				id;
-	pthread_t		thread;
-	int				meals;
-	long			last_meal;
-	int				left;
-	int				right;
-	t_infos			*data;
-}	t_philo;
+	int               id;
+	long int          last_meal_ms;
+	long int          meals_eaten;
+	pthread_t         thread;
+	pthread_mutex_t  *left_fork;
+	pthread_mutex_t  *right_fork;
+	struct s_infos   *infos;
+} t_philo;
 
 
 // main.c
@@ -60,10 +61,11 @@ typedef struct s_philo
 int		parse(char **argv);
 
 // init.c
-int		init_infos(char **argv);
+t_infos		*init_infos(char **argv);
 
 // utils.c
-void	print_error_parse(char *begin, char *end, int i);
+void	print_error_parse(char *begin, int i, char *end);
+//size_t	ft_arraylen(char **array);
 
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:09:20 by wcapt             #+#    #+#             */
-/*   Updated: 2025/08/26 14:41:23 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/08/28 14:47:50 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	max_or_min(char **argv)
 	while (argv[i])
 	{
 		number = ft_atol(argv[i]);
-		if (i == 1 && (number < 1 || argv[i] > NB_MAX_PHILO))
+		if (i == 1 && (number < 1 || ft_atoi(argv[i]) > NB_MAX_PHILO))
 			return (print_error_parse("ERROR : ARG ", i, " > MAX PHILO\n"), 0);
 		if ((number < 0 || number > INT_MAX))
 			return (print_error_parse("ERROR : ARG ", i, " > INT_MAX\n"), 0);
