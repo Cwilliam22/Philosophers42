@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/08/28 14:43:22 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/08/29 13:13:53 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 t_infos	*init_infos(char **argv)
 {
-	t_infos *infos;
-	
+	t_infos	*infos;
+
 	infos = malloc(sizeof(*infos));
 	if (!infos)
 		return (NULL);

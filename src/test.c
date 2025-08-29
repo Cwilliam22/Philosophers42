@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/08/29 13:12:30 by wcapt            ###   ########.fr       */
+/*   Created: 2025/08/29 13:12:11 by wcapt             #+#    #+#             */
+/*   Updated: 2025/08/29 13:12:46 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-void	print_error_parse(char *begin, int i, char *end)
+void	print_arg_struct_infos(t_infos *infos)
 {
-	char	*index;
-
-	index = ft_itoa(i);
-	ft_putstr_fd(begin, 2);
-	write(2, index, 1);
-	ft_putstr_fd(end, 2);
-	free(index);
+	printf("nb_arg : %zu\n", infos->nb_arg);
+	printf("nb_philo : %ld\n", infos->nb_philo);
+	printf("time_to_die : %ld\n", infos->time_to_die);
+	printf("time_to_eat : %ld\n", infos->time_to_eat);
+	printf("time_to_sleep : %ld\n", infos->time_to_sleep);
 }
