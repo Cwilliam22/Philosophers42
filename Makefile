@@ -6,57 +6,109 @@
 #    By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 11:49:11 by wcapt             #+#    #+#              #
-#    Updated: 2025/08/29 13:10:12 by wcapt            ###   ########.fr        #
+#    Updated: 2025/09/01 16:12:27 by wcapt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# Nom des exécutables
-NAME = philo
+# Program name
+NAME        = philo
 
-# Compilateur et flags
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+# Directories
+SRCDIR      = src
+OBJDIR      = obj
+INCDIR      = include
+LIBFTDIR    = libft
 
-# Dossiers
-SRC_DIR	= src
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+# Compiler and flags
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror -g3
+THREADFLAGS = -pthread
+CFLAGS     += $(THREADFLAGS)
 
-# Fichiers sources
-SRC = $(SRC_DIR)/main.c $(SRC_DIR)/parse.c $(SRC_DIR)/init.c \
-		$(SRC_DIR)/free_all.c $(SRC_DIR)/setup_philo.c $(SRC_DIR)/utils.c \
-		$(SRC_DIR)/test.c
+# Include paths
+CPPFLAGS    = -I$(INCDIR) -I$(LIBFTDIR)/include
 
-# Fichiers objets
-OBJ = $(SRC:.c=.o)
+# Linker flags & libs
+LDFLAGS     = -L$(LIBFTDIR)
+LDLIBS      = -lft $(THREADFLAGS)
 
-# Dépendances
-all: $(LIBFT) $(NAME)
+# Colors for output
+RED =    \033[0;31m
+GREEN =  \033[0;32m
+YELLOW = \033[0;33m
+BLUE =   \033[0;34m
+PURPLE = \033[0;35m
+CYAN =   \033[0;36m
+WHITE =  \033[0;37m
+RESET =  \033[0m
 
-$(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR)
+# Files in SRCS
+SRCS =  $(SRCDIR)/main.c \
+		$(SRCDIR)/parse.c \
+		$(SRCDIR)/init.c \
+		$(SRCDIR)/free_all.c \
+		$(SRCDIR)/setup_philo.c \
+		$(SRCDIR)/utils.c \
+		$(SRCDIR)/test.c
 
-$(NAME): $(OBJ) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+# Object files (préserve l'arborescence sous src/)
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+
+# Libft
+LIBFT = $(LIBFTDIR)/libft.a
+
+# Default rule
+all: $(NAME)
+
+# Main target
+$(NAME): $(LIBFT) $(OBJS)
+	@echo "$(CYAN)Linking $(NAME)...$(RESET)"
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(NAME) $(LDLIBS)
 	@echo "\033[32m     ____  __    _ __                       __                  \033[0m"
 	@echo "\033[32m    / __ \/ /_  (_) /___  _________  ____  / /_  ___  __________\033[0m"
 	@echo "\033[32m   / /_/ / __ \/ / / __ \/ ___/ __ \/ __ \/ __ \/ _ \/ ___/ ___/\033[0m"
 	@echo "\033[32m  / ____/ / / / / / /_/ (__  ) /_/ / /_/ / / / /  __/ /  (__  ) \033[0m"
 	@echo "\033[32m /_/   /_/ /_/_/_/\____/____/\____/ .___/_/ /_/\___/_/  /____/  \033[0m"
 	@echo "\033[32m                                 /_/                            \033[0m"
-	@echo "\033[32m philo compiled successfully!\033[0m"                                                
+	@echo "$(GREEN)✅ $(NAME) compiled successfully!$(RESET)"
 
-$(SRC_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+# Build libft
+$(LIBFT):
+	@echo "$(PURPLE)Compiling libft...$(RESET)"
+	@$(MAKE) -C $(LIBFTDIR) --no-print-directory
+	@echo "$(GREEN)✅ libft compiled!$(RESET)"
 
+# Compile object files with automatic directory creation
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
+	@echo "$(YELLOW)Compiling $<...$(RESET)"
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+# Clean object files
 clean:
-	@rm -f $(OBJ)
-	@$(MAKE) -C $(LIBFT_DIR) clean
-	@echo "\033[33m Object files removed!\033[0m"
+	@echo "$(RED)Cleaning object files...$(RESET)"
+	@rm -rf $(OBJDIR)
+	@$(MAKE) -C $(LIBFTDIR) clean --no-print-directory
+	@echo "$(GREEN)✅ Object files cleaned!$(RESET)"
 
+# Clean everything
 fclean: clean
+	@echo "$(RED)Cleaning executable...$(RESET)"
 	@rm -f $(NAME)
-	@$(MAKE) -C $(LIBFT_DIR) fclean
-	@echo "\033[31m  Executable removed!\033[0m"
+	@$(MAKE) -C $(LIBFTDIR) fclean --no-print-directory
+	@echo "$(GREEN)✅ Everything cleaned!$(RESET)"
 
+# Rebuild everything
 re: fclean all
+
+# Debug build (sanitizer + define DEBUG)
+debug: CFLAGS += -fsanitize=address -DDEBUG
+debug: $(NAME)
+	@echo "$(BLUE)✅ Debug version compiled!$(RESET)"
+
+# Norminette
+norm:
+	@echo "$(PURPLE)Checking norminette...$(RESET)"
+	@norminette $(SRCDIR) $(INCDIR) $(LIBFTDIR) 2>/dev/null || echo "$(YELLOW)norminette not found or errors detected$(RESET)"
+
+.PHONY: all clean fclean re debug norm

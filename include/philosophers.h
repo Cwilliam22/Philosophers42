@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/08/29 13:16:41 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/01 14:56:57 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,30 +29,36 @@
 
 # define NB_MAX_PHILO 200
 
+typedef struct s_forks
+{
+	pthread_mutex_t mtx;
+}	t_forks;
+
+typedef struct s_philos
+{
+	int				id;
+	long long		last_meal;
+	int				meals_eaten;
+	pthread_t		thread;
+	t_forks			*left_fork;
+	t_forks			*right_fork;
+	struct s_infos	*infos;
+}	t_philos;
+
 typedef struct s_infos
 {
-	size_t			nb_arg;
-	long int		nb_philo;
-	long int		time_to_die;
-	long int		time_to_eat;
-	long int		time_to_sleep;
-	long int		number_of_meals;
-	//t_philo			*philo;
-	pthread_mutex_t	*forks;
+	int				nb_arg;
+	int				nb_philo;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
+	int				number_of_meals;
+	long long		start;
+	t_philos		*philos;
+	t_forks			*forks;
 	pthread_mutex_t	print_mutex;
 	int				simulation_stop;
 }	t_infos;
-
-typedef struct s_philo
-{
-	int				id;
-	long int		last_meal_ms;
-	long int		meals_eaten;
-	pthread_t		thread;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	struct s_infos	*infos;
-}	t_philo;
 
 // main.c
 
@@ -61,9 +67,11 @@ int		parse(char **argv);
 
 // init.c
 t_infos	*init_infos(char **argv);
+int		init_forks(t_infos *infos);
+int		init_philos(t_infos *infos);
 
 // utils.c
-void	print_error_parse(char *begin, int i, char *end);
+void	print_error(char *begin, int i, char *end, int out);
 
 //test.c
 void	print_arg_struct_infos(t_infos *infos);

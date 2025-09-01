@@ -6,19 +6,44 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/08/29 13:12:30 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/01 12:30:58 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-void	print_error_parse(char *begin, int i, char *end)
+static	char	*join_and_free(char *str1, char *str2)
 {
-	char	*index;
+	char	*result;
 
-	index = ft_itoa(i);
-	ft_putstr_fd(begin, 2);
-	write(2, index, 1);
-	ft_putstr_fd(end, 2);
-	free(index);
+	if (!str1 || !str2)
+	{
+		free(str1);
+		free(str2);
+		return (NULL);
+	}
+	result = ft_strjoin(str1, str2);
+	free(str1);
+	free(str2);
+	return (result);
+}
+
+void	print_error(char *begin, int i, char *end, int out)
+{
+	char	*idx;
+	char	*start;
+	char	*finish;
+
+	start = ft_strdup(begin);
+	if (end)
+		finish = ft_strdup(end);
+	if (i != -1)
+	{
+		idx = ft_itoa(i);
+		start = join_and_free(start, idx);
+	}
+	if (end)
+		start = join_and_free(start, finish);
+	write(out, start, ft_strlen(start));
+	free(start);
 }
