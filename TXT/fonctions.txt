@@ -1,14 +1,174 @@
 
-#include <pthread.h>
 
-(thread)
+Functions allowed :
+
+(other functions)
+	- memset
+	- printf
+	- malloc
+	- free
+	- write
+	- usleep
+	- gettimeofday
+
+(thread functions)
+	- pthread_create
+	- pthread_detach
+	- pthread_join
+
+(mutex functions)
+	- pthread_mutex_init
+	- pthread_mutex_destroy
+	- pthread_mutex_lock
+	- pthread_mutex_unlock
+
+
+# **************************************************************************** #
+#                                  OTHERS                                      #
+# **************************************************************************** #
+
+--------------------------------------------------------------
+|                                                            |
+| int gettimeofday(struct timeval *tv, struct timezone *tz); |
+|                                                            |
+--------------------------------------------------------------
+
+Infos :
+	Donne l’heure mur (wall-clock) actuelle, en UTC, depuis l’Epoch Unix
+	(1er janvier 1970). Elle renvoie des secondes + microsecondes.
+
+Arguments :
+	- tv (obligatoire) : pointeur vers une structure remplie par le noyau
+		-> (struct)
+			struct timeval
+			{
+				time_t      tv_sec;   // secondes depuis l’Epoch
+				suseconds_t tv_usec;  // microsecondes [0..999999]
+			};
+	- tz (pas necessaire, toujours NULL) : ancien champ pour fuseau/DST.
+
+Retour :
+	0 -> succès
+	-1 -> erreur, avec errno (très rare sur Linux pour cette fonction)
+
+# **************************************************************************** #
+#                                  THREAD                                      #
+# **************************************************************************** #
+
 - pthread_create(&my_thread, NULL, my_function, NULL);
 - pthread_join(thread1, NULL);
 - pthread_self();
 
-(mutex)
+----------------------------------------------------
+|                                                  |
+| int pthread_create(pthread_t *thread,            |
+|                  const pthread_attr_t *attr,     |
+|                  void *(*start_routine)(void *), |
+|                  void *arg);                     |
+|                                                  |
+----------------------------------------------------
+
+Infos :
+	Lance un nouveau thread dans le processus. On lui dit quelle
+	fonction exécuter (la routine du thread) et quel argument lui passer.
+	Si ça marche, l’identifiant du thread créé est écrit dans la
+	variable fournis.
+
+Arguments :
+	thread : sortie -> l’ID du thread créé sera stocké à cette adresse (si succès).
+	attr : les attributs du thread (stack, politique d’ordonnancement, détaché/joinable…).
+		-> NULL pour les attributs par défaut (c’est ce qu’on fait 99% du temps).
+	start_routine : la fonction que le thread va exécuter.
+		-> Sa signature doit être void *f(void *).
+	arg : pointeur passé tel quel à start_routine (souvent un pointeur vers ta struct t_philo).
+
+Retour :
+	0 -> succès
+	(>0) -> erreur ou indefini
+
+Type d'erreur :
+	EAGAIN : pas assez de ressources pour créer un thread ou on dépasserait la limite
+		système sur le nombre de threads.
+	EINVAL : attributs attr invalides.
+	EPERM : pas les permissions pour les paramètres d’ordonnancement demandés.
+
+----------------------------------------------------
+|                                                  |
+| pthread_join(pthread_t thread, void **value_ptr) |
+|                                                  |
+----------------------------------------------------
+
+Infos :
+	Bloque le thread appelant jusqu’à ce que le thread thread se termine.
+	S’il est déjà terminé, l’appel retourne tout de suite.
+
+	Si value_ptr n’est pas NULL, on récupère dedans la valeur passée à
+	pthread_exit() (ou le return de la routine, converti en void *).
+
+	Quand pthread_join() réussit, le thread visé est terminé
+	(ses ressources sont libérées).
+
+Arguments :
+	thread : l’identifiant du thread à attendre
+	value_ptr : optionnel
+		-> NULL pour ignorer le résultat du thread
+
+Retour :
+	0 -> succès
+	(>0) -> erreur
+
+Types d'erreurs :
+	ESRCH : aucun thread ne correspond à cet ID (mauvais identifiant/déjà complètement disparu).
+	EINVAL : le thread n’est pas joignable (ex: détaché via pthread_detach ou créé détaché).
+	EDEADLK : deadlock détecté.
+	Jamais EINTR (les signaux n’interrompent pas pthread_join).
+
+Joinable vs detached :
+	Par défaut, un thread est joinable -> l’attendre avec pthread_join (ou le détacher).
+	Un thread détaché (pthread_detach) n’est pas joignable -> pthread_join renverra EINVAL.
+	L’intérêt du détaché : ses ressources sont libérées automatiquement à la fin, mais plus de l’attendre.
+
+# **************************************************************************** #
+#                                  MUTEX                                       #
+# **************************************************************************** #
+
 - pthread_mutex_init(&mutex, NULL);
 - pthread_mutex_destroy(&mutex);
 - pthread_mutex_lock(&mutex);
 - pthread_mutex_unlock(&mutex);
+
+---------------------------------
+|                               |
+| pthread_mutex_destroy(&mutex) |
+|                               |
+---------------------------------
+
+Infos :
+	Détruit un mutex initialisé. Après destruction, l’objet est comme
+	non-initialisé (on ne doit plus l’utiliser).
+
+	Ne pas détruire un mutex verrouillé. Détruire un mutex encore 
+	locké -> comportement indéfini. Il doit être initialisé ET déverrouillé
+	pour pouvoir le détruire (cas safe).
+
+Retour :
+	0 -> succès
+	(> 0) -> erreur
+
+pthread_mutex_destroy peut échouer avec :
+	EBUSY :
+		tentative de détruire un mutex encore verrouillé ou référencé.
+	EINVAL :
+		mutex invalide (non initialisé/corrompu).
+
+Schema :
+	non-initialisé
+		|
+		| pthread_mutex_init / PTHREAD_MUTEX_INITIALIZER
+		v
+	initialisé, déverrouillé <--> (lock/unlock répétés) <--> initialisé, verrouillé
+		|
+		| pthread_mutex_destroy  (seulement si déverrouillé)
+		v
+	non-initialisé
 

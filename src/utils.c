@@ -6,11 +6,19 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/01 12:30:58 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/01 19:44:11 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+
+long long	time_is_flying_ms(void)
+{
+	struct timeval	timeval;
+	
+	gettimeofday(&timeval, NULL);
+	return (timeval.tv_sec * 1000 + timeval.tv_usec / 1000);
+}
 
 static	char	*join_and_free(char *str1, char *str2)
 {

@@ -6,7 +6,7 @@
 #    By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 11:49:11 by wcapt             #+#    #+#              #
-#    Updated: 2025/09/01 16:12:27 by wcapt            ###   ########.fr        #
+#    Updated: 2025/09/01 19:45:57 by wcapt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,7 @@ SRCS =  $(SRCDIR)/main.c \
 		$(SRCDIR)/free_all.c \
 		$(SRCDIR)/setup_philo.c \
 		$(SRCDIR)/utils.c \
+		$(SRCDIR)/simulation.c \
 		$(SRCDIR)/test.c
 
 # Object files (préserve l'arborescence sous src/)

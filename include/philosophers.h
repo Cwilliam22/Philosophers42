@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/01 14:56:57 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/01 19:59:40 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define RESET "\033[0m"
 
 # define NB_MAX_PHILO 200
+
+# define MORE_TIME 30
 
 typedef struct s_forks
 {
@@ -63,17 +65,25 @@ typedef struct s_infos
 // main.c
 
 // parse.c
-int		parse(char **argv);
+int			parse(char **argv);
 
 // init.c
-t_infos	*init_infos(char **argv);
-int		init_forks(t_infos *infos);
-int		init_philos(t_infos *infos);
+t_infos		*init_infos(char **argv);
+int			init_forks(t_infos *infos);
+int			init_philos(t_infos *infos);
 
 // utils.c
-void	print_error(char *begin, int i, char *end, int out);
+void		print_error(char *begin, int i, char *end, int out);
+long long	time_is_flying_ms(void);
+
+// simulation.c
+int			start_simulation(t_infos *infos);
+
+// free_all.c
+void		clean_all(t_infos *infos);
+void		destroy_mutex(t_infos *infos);
 
 //test.c
-void	print_arg_struct_infos(t_infos *infos);
+void		print_arg_struct_infos(t_infos *infos);
 
 #endif

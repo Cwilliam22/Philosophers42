@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/01 14:46:55 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/01 19:04:44 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ int	init_forks(t_infos *infos)
 
 int	init_philos(t_infos *infos)
 {
-	int	i;
-	t_philos *philo;
+	int			i;
+	t_philos	*philo;
 
 	i = 0;
 	infos->philos = malloc(sizeof(t_philos) * infos->nb_philo);
