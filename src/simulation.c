@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/01 20:31:43 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/02 17:04:19 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@ void	*philo_rout(void *data)
 	t_philos	*philos;
 
 	philos = (t_philos *)data;
-	if (philos->infos->number_of_meals == 0)
-		return (NULL);
-	else
-		return (NULL);
+	//mettre à jour last_meal_ms
+	//afficher “is eating”,
+	//dormir time_to_eat,
+	//incrémenter meals_eaten,
+	//reposer les 2 fourchettes.
+	//Dormir (time_to_sleep) “is sleeping”.
+	//Penser “is thinking”, petite micro-pause pour desserrer la contention.
+	//Si number_of_meals est défini et atteint → sortir de la boucle.
 }
 
 int	start_simulation(t_infos *infos)
@@ -48,3 +52,5 @@ int	start_simulation(t_infos *infos)
 // lancer un monitor qui surveille les philos (pret a detecter la mort d'un philo)
 // chaque philo tourne dans une boucle 
 
+
+//Le mutex de print empêche de mélanger une ligne en deux, mais n’impose pas un ordre global croissant des timestamps.

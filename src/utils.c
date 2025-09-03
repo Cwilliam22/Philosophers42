@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/01 19:44:11 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/02 17:39:29 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,9 @@ void	print_error(char *begin, int i, char *end, int out)
 		start = join_and_free(start, finish);
 	write(out, start, ft_strlen(start));
 	free(start);
+}
+
+void	print_action(t_infos *infos, char *todo)
+{
+	pr
 }
