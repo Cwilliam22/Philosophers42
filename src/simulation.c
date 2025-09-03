@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/02 17:04:19 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/03 23:47:46 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,30 @@
 
 void	*philo_rout(void *data)
 {
-	t_philos	*philos;
+	t_philos	*philo;
+	t_infos		*infos;
 
-	philos = (t_philos *)data;
-	//mettre à jour last_meal_ms
-	//afficher “is eating”,
-	//dormir time_to_eat,
-	//incrémenter meals_eaten,
-	//reposer les 2 fourchettes.
-	//Dormir (time_to_sleep) “is sleeping”.
-	//Penser “is thinking”, petite micro-pause pour desserrer la contention.
-	//Si number_of_meals est défini et atteint → sortir de la boucle.
+	philo = (t_philos *)data;
+	infos = philo->infos;
+	while (!infos->simulation_stop)
+	{
+		// Prendre les fourchettes (toujours dans le même ordre pour éviter deadlock)
+		pthread_mutex_lock(&philo->left_fork->mtx);
+		pthread_mutex_lock(&philo->right_fork->mtx);
+		philo->last_meal = time_is_flying_ms();
+		print_action(infos, "is eating");
+		usleep(infos->time_to_eat * 1000);
+		philo->meals_eaten++;
+		pthread_mutex_unlock(&philo->left_fork->mtx);
+		pthread_mutex_unlock(&philo->right_fork->mtx);
+		print_action(infos, "is sleeping");
+		usleep(infos->time_to_sleep * 1000);
+		print_action(infos, "is thinking");
+		usleep(100); // micro-pause pour éviter la contention
+		if (infos->number_of_meals > 0 && philo->meals_eaten >= infos->number_of_meals)
+			break;
+	}
+	return (NULL);
 }
 
 int	start_simulation(t_infos *infos)
