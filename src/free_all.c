@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:11:58 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/01 19:03:26 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/04 14:22:34 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	clean_all(t_infos *infos)
 	destroy_mutex(infos);
 	if (!infos)
 		return ;
-	// Need pthread_join() to avoid any problems with free and destroy_mutex() ???
+	/* Need pthread_join() to avoid any problems with
+	free and destroy_mutex() ???*/
 	destroy_mutex(infos);
 	pthread_mutex_destroy(&infos->print_mutex);
 	if (infos->forks)

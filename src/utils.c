@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/03 21:32:36 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/04 15:20:13 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 long long	time_is_flying_ms(void)
 {
 	struct timeval	timeval;
-	
+
 	gettimeofday(&timeval, NULL);
 	return (timeval.tv_sec * 1000 + timeval.tv_usec / 1000);
 }
@@ -56,22 +56,13 @@ void	print_error(char *begin, int i, char *end, int out)
 	free(start);
 }
 
-void	print_action(t_infos *infos, char *todo)
+void	print_action(t_infos *infos, char *todo, int id)
 {
 	long long	time;
 	
 	time = 0;
-	time = infos->start - time_is_flying_ms();
-	write(1, "[", 1);
-	write(1, ft_itoa_ll(time), ft_strlen(ft_itoa_ll(time)));
-	write(1, "]", 1);
-	write(1, " ", 1);
-	write(1, todo, ft_strlen(todo));
-	write(1, "\n", 1);
+	time = time_is_flying_ms() - infos->start;
+	pthread_mutex_lock(&infos->print_mutex);
+	printf("[" GREEN "%lld" RESET "] Philo %d %s\n", time, id, todo);
+	pthread_mutex_unlock(&infos->print_mutex);
 }
-
-// has taken a fork
-// is eating
-// is sleeping
-// is thinking
-// died

@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/03 21:34:06 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/04 14:41:49 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int			init_philos(t_infos *infos);
 // utils.c
 void		print_error(char *begin, int i, char *end, int out);
 long long	time_is_flying_ms(void);
-void		print_action(t_infos *infos, char *todo);
+void		print_action(t_infos *infos, char *todo, int id);
 
 // simulation.c
 int			start_simulation(t_infos *infos);

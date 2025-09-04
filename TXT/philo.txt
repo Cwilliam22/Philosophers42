@@ -56,6 +56,20 @@ modifie la ressource. Puis libère le mutex pour qu'un autre thread puisse y acc
 Protéger la partie du code qui contient la ressource en utilisant un mutex.
 Caractéristiques des mutex ???
 
+(fonctionnement des routines dans philo)
+	- Chaque thread pilosophe s'execute en boucle, chacun de son cote tant que personne n'est mort (simulation_stop = 1)
+	- Chaque philo effectue sa routine en simultané.
+	- Chaque routine est en apparence la meme mais differentes dans la mesure ou
+		chaque philo n'a pas acces forcement a la ou les ressources qu'il demande.
+	- La routine commence toujours pas l'acces aux fourchettes (forks).
+	- Puis le philo mange s'il a acces aux deux fourchettes,
+		dorts et pense avant de finir sa routine.
+	- L'action de manger est toujours precede de la fonction pthread_mutex_lock()
+		pour lock les mutexs correspondant a la forchette de gauche et de droite du philo.
+	- Et elle est toujours suivis de la fonction pthread_mutex_unlock() afin de liberer
+		les ressources/mutexs utilises.
+
+
 Autres définitions : 
 
 	- Programmation concurrente : est une manière de concevoir 
