@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/04 15:20:13 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 00:00:51 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,44 @@ void	print_action(t_infos *infos, char *todo, int id)
 	time = 0;
 	time = time_is_flying_ms() - infos->start;
 	pthread_mutex_lock(&infos->print_mutex);
-	printf("[" GREEN "%lld" RESET "] Philo %d %s\n", time, id, todo);
+	if (!infos->simulation_stop)
+		printf("[" GREEN "%lld" RESET "] Philo %d %s\n", time, id, todo);
 	pthread_mutex_unlock(&infos->print_mutex);
 }
+
+void	ft_usleep(long long time)
+{
+	long long start;
+
+	start = time_is_flying_ms();
+	while(time_is_flying_ms() - start < time)
+		usleep(100);
+}
+
+void	take_a_fork(t_infos *infos, char the_fork)
+{
+	int		*taken;
+	t_forks	*forks;
+	
+	while (!infos->simulation_stop)
+	{
+		taken = &(infos->philos->l_fork);
+		forks = infos->philos->left_fork;
+		if (the_fork = 'r')
+		{
+			taken = &(infos->philos->l_fork);
+			forks = infos->philos->left_fork;
+		}
+		pthread_mutex_lock(&forks->mtx);
+		if (!(*taken) && !forks->used)
+		{
+			*taken = 1;
+			forks->used = 1;
+			pthread_mutex_unlock(&(forks->mtx));
+			print_action(infos, "has taken a fork", infos->philos->id);
+		}
+		else
+			pthread_mutex_unlock(&(forks->mtx));
+	}
+}
+	

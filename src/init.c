@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/04 13:39:34 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/04 23:51:25 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	init_forks(t_infos *infos)
 	{
 		if (pthread_mutex_init(&infos->forks[i].mtx, NULL) != 0)
 			return (0);
+		infos->forks[i].used = 0;
 		i++;
 	}
 	return (1);
@@ -69,6 +70,8 @@ int	init_philos(t_infos *infos)
 		philo->infos = infos;
 		philo->left_fork = &infos->forks[i];
 		philo->right_fork = &infos->forks[(i + 1) % infos->nb_philo];
+		philo->l_fork = 0;
+		philo->r_fork = 0;
 		i++;
 	}
 	return (1);

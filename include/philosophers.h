@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/04 14:41:49 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/04 23:50:50 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@
 
 typedef struct s_forks
 {
-	pthread_mutex_t mtx;
+	pthread_mutex_t	mtx;
+	int				used;
 }	t_forks;
 
 typedef struct s_philos
@@ -44,6 +45,8 @@ typedef struct s_philos
 	pthread_t		thread;
 	t_forks			*left_fork;
 	t_forks			*right_fork;
+	int				l_fork;
+	int				r_fork;
 	struct s_infos	*infos;
 }	t_philos;
 
@@ -76,6 +79,7 @@ int			init_philos(t_infos *infos);
 void		print_error(char *begin, int i, char *end, int out);
 long long	time_is_flying_ms(void);
 void		print_action(t_infos *infos, char *todo, int id);
+void		ft_usleep(long long time);
 
 // simulation.c
 int			start_simulation(t_infos *infos);

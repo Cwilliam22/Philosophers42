@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/04 15:29:54 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 00:05:51 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,28 +46,30 @@ void	*philo_rout(void *data)
 
 	philo = (t_philos *)data;
 	infos = philo->infos;
-	while (time_is_flying_ms() < infos->start)
-        usleep(100);
 	while (!infos->simulation_stop)
 	{
-		pthread_mutex_lock(&philo->left_fork->mtx);
-		print_action(infos, "has taken a fork", philo->id);
-		pthread_mutex_lock(&philo->right_fork->mtx);
-		print_action(infos, "has taken a fork", philo->id);
-		philo->last_meal = time_is_flying_ms();
-		print_action(infos, "is eating", philo->id);
-		usleep(infos->time_to_eat * 1000);
-		philo->meals_eaten++;
-		pthread_mutex_unlock(&philo->left_fork->mtx);
-		pthread_mutex_unlock(&philo->right_fork->mtx);
-		print_action(infos, "is sleeping", philo->id);
-		usleep(infos->time_to_sleep * 1000);
-		print_action(infos, "is thinking", philo->id);
-		// micro-pause pour éviter la contention
-		usleep(100);
-		if (infos->number_of_meals > 0 && philo->meals_eaten
-			>= infos->number_of_meals)
+		if (philo->meals_eaten >= infos->number_of_meals &&
+			infos->number_of_meals > 0)
 			break ;
+		take_a_fork(infos, 'r');
+		if (philo->r_fork)
+			take_a_fork(infos, 'l');
+		if (philo->r_fork && philo->l_fork)
+		{
+			philo->last_meal = time_is_flying_ms();
+			print_action(infos, "is eating", philo->id);
+			ft_usleep(infos->time_to_eat * 1000);
+			philo->meals_eaten++;
+			pthread_mutex_unlock(&philo->left_fork->mtx);
+			pthread_mutex_unlock(&philo->right_fork->mtx);
+			print_action(infos, "is sleeping", philo->id);
+			ft_usleep(infos->time_to_sleep * 1000);
+			print_action(infos, "is thinking", philo->id);
+			//usleep(100);
+			if (infos->number_of_meals > 0 && philo->meals_eaten
+				>= infos->number_of_meals)
+				break ;
+			}
 	}
 	return (NULL);
 }
