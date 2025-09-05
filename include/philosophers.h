@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 17:52:52 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 20:13:36 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@
 # include "../libft/includes/libft.h"
 
 # define RED	"\033[31m"
-# define GREEN "\033[32m"
-# define RESET "\033[0m"
+# define GREEN	"\033[32m"
+# define BLUE	"\033[34m"
+# define NAVY	"\033[38;5;19m"
+# define RESET	"\033[0m"
 
 # define NB_MAX_PHILO 200
 
@@ -63,6 +65,7 @@ typedef struct s_infos
 	t_forks			*forks;
 	pthread_mutex_t	print_mutex;
 	int				simulation_stop;
+	pthread_t		monitor_thread;
 }	t_infos;
 
 // main.c
@@ -80,21 +83,21 @@ void		print_error(char *begin, int i, char *end, int out);
 long long	time_is_flying_ms(void);
 void		print_action(t_infos *infos, char *todo, int id);
 void		ft_usleep(long long time);
-void		take_a_fork(t_infos *infos, char the_fork);
-void		*philo_rout(void *data);
-void		release_forks_and_sleep(t_philos *philo);
-void		release_fork(char fork_name, t_philos *philos);
+void		take_a_fork(t_philos *philos, char the_fork);
 
 // simulation.c
 int			start_simulation(t_infos *infos);
-void		*philo_rout(void *data);
+void		*monitor(void *data);
 
 // free_all.c
 int			clean_all(t_infos *infos);
 void		destroy_mutex(t_infos *infos);
 int			wait_before_destroy(t_infos *infos);
 
-//test.c
-void		print_arg_struct_infos(t_infos *infos);
+// action.c
+void		take_a_fork(t_philos *philo, char the_fork);
+void		eat_this(t_philos *philo);
+void		sleep_and_think(t_philos *philo);
+
 
 #endif

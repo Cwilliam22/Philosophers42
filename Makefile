@@ -6,7 +6,7 @@
 #    By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 11:49:11 by wcapt             #+#    #+#              #
-#    Updated: 2025/09/04 15:16:37 by wcapt            ###   ########.fr        #
+#    Updated: 2025/09/05 19:23:19 by wcapt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,8 @@ SRCS =  $(SRCDIR)/main.c \
 		$(SRCDIR)/free_all.c \
 		$(SRCDIR)/utils.c \
 		$(SRCDIR)/simulation.c \
-		$(SRCDIR)/test.c
+		$(SRCDIR)/time.c \
+		$(SRCDIR)/action.c
 
 # Object files (préserve l'arborescence sous src/)
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
@@ -64,12 +65,12 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJS)
 	@echo "$(CYAN)Linking $(NAME)...$(RESET)"
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(NAME) $(LDLIBS)
-	@echo "\033[32m     ____  __    _ __                       __                  \033[0m"
-	@echo "\033[32m    / __ \/ /_  (_) /___  _________  ____  / /_  ___  __________\033[0m"
-	@echo "\033[32m   / /_/ / __ \/ / / __ \/ ___/ __ \/ __ \/ __ \/ _ \/ ___/ ___/\033[0m"
-	@echo "\033[32m  / ____/ / / / / / /_/ (__  ) /_/ / /_/ / / / /  __/ /  (__  ) \033[0m"
-	@echo "\033[32m /_/   /_/ /_/_/_/\____/____/\____/ .___/_/ /_/\___/_/  /____/  \033[0m"
-	@echo "\033[32m                                 /_/                            \033[0m"
+	@echo "\033[36m     ____  __    _ __                       __                  \033[0m"
+	@echo "\033[36m    / __ \/ /_  (_) /___  _________  ____  / /_  ___  __________\033[0m"
+	@echo "\033[36m   / /_/ / __ \/ / / __ \/ ___/ __ \/ __ \/ __ \/ _ \/ ___/ ___/\033[0m"
+	@echo "\033[36m  / ____/ / / / / / /_/ (__  ) /_/ / /_/ / / / /  __/ /  (__  ) \033[0m"
+	@echo "\033[36m /_/   /_/ /_/_/_/\____/____/\____/ .___/_/ /_/\___/_/  /____/  \033[0m"
+	@echo "\033[36m                                 /_/                            \033[0m"
 	@echo "$(GREEN)✅ $(NAME) compiled successfully!$(RESET)"
 
 # Build libft

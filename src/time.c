@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/29 13:12:11 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/01 14:58:33 by wcapt            ###   ########.fr       */
+/*   Created: 2025/09/05 18:12:40 by wcapt             #+#    #+#             */
+/*   Updated: 2025/09/05 20:21:03 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-void	print_arg_struct_infos(t_infos *infos)
+long long	time_is_flying_ms(void)
 {
-	printf("nb_arg : %d\n", infos->nb_arg);
-	printf("nb_philo : %d\n", infos->nb_philo);
-	printf("time_to_die : %lld\n", infos->time_to_die);
-	printf("time_to_eat : %lld\n", infos->time_to_eat);
-	printf("time_to_sleep : %lld\n", infos->time_to_sleep);
+	struct timeval	timeval;
+
+	gettimeofday(&timeval, NULL);
+	return (timeval.tv_sec * 1000 + timeval.tv_usec / 1000);
+}
+
+void	ft_usleep(long long time)
+{
+	long long	start;
+
+	start = time_is_flying_ms();
+	while (time_is_flying_ms() - start < time)
+		usleep(100);
 }

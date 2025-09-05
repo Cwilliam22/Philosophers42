@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/04 23:51:25 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 19:49:38 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ t_infos	*init_infos(char **argv)
 		infos->number_of_meals = ft_atol(argv[5]);
 	else
 		infos->number_of_meals = -1;
+	if (pthread_mutex_init(&infos->print_mutex, NULL) != 0)
+		return (free(infos), NULL);
 	if (!init_forks(infos))
-		return (NULL);
+		return (free(infos), NULL);
 	if (!init_philos(infos))
-		return (NULL);
+		return (free(infos->forks), free(infos), NULL);
 	return (infos);
 }
 
@@ -47,7 +49,12 @@ int	init_forks(t_infos *infos)
 	while (i < infos->nb_philo)
 	{
 		if (pthread_mutex_init(&infos->forks[i].mtx, NULL) != 0)
+		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&infos->forks[i].mtx);
+			free(infos->forks);
 			return (0);
+		}
 		infos->forks[i].used = 0;
 		i++;
 	}
@@ -72,6 +79,7 @@ int	init_philos(t_infos *infos)
 		philo->right_fork = &infos->forks[(i + 1) % infos->nb_philo];
 		philo->l_fork = 0;
 		philo->r_fork = 0;
+		philo->meals_eaten = 0;
 		i++;
 	}
 	return (1);
