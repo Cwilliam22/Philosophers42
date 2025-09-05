@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/04 23:50:50 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 17:52:52 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,19 @@ void		print_error(char *begin, int i, char *end, int out);
 long long	time_is_flying_ms(void);
 void		print_action(t_infos *infos, char *todo, int id);
 void		ft_usleep(long long time);
+void		take_a_fork(t_infos *infos, char the_fork);
+void		*philo_rout(void *data);
+void		release_forks_and_sleep(t_philos *philo);
+void		release_fork(char fork_name, t_philos *philos);
 
 // simulation.c
 int			start_simulation(t_infos *infos);
 void		*philo_rout(void *data);
 
 // free_all.c
-void		clean_all(t_infos *infos);
+int			clean_all(t_infos *infos);
 void		destroy_mutex(t_infos *infos);
+int			wait_before_destroy(t_infos *infos);
 
 //test.c
 void		print_arg_struct_infos(t_infos *infos);

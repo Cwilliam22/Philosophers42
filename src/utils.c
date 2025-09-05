@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 00:00:51 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 17:54:28 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	take_a_fork(t_infos *infos, char the_fork)
 	{
 		taken = &(infos->philos->l_fork);
 		forks = infos->philos->left_fork;
-		if (the_fork = 'r')
+		if (the_fork == 'r')
 		{
 			taken = &(infos->philos->l_fork);
 			forks = infos->philos->left_fork;
@@ -104,3 +104,30 @@ void	take_a_fork(t_infos *infos, char the_fork)
 	}
 }
 	
+
+void	release_fork(char fork_name, t_philos *philos)
+{
+	int		*taken;
+	t_forks	*forks;
+
+	taken = &(philos->r_fork);
+	forks = philos->right_fork;
+	if (fork_name == 'l')
+	{
+		taken = &(philos->l_fork);
+		forks = philos->left_fork;
+	}
+	pthread_mutex_lock(&(forks->mtx));
+	*taken = 0;
+	forks->used = 0;
+	pthread_mutex_unlock(&(forks->mtx));
+}
+
+void	release_forks_and_sleep(t_philos *philo)
+{
+	release_fork('r', philo);
+	release_fork('l', philo);
+	print_action(philo->infos, "is sleeping", philo->id);
+	ft_usleep(philo->infos->time_to_sleep);
+	print_action(philo->infos, "is thinking", philo->id);
+}

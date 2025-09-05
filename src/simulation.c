@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 00:05:51 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 18:05:12 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,25 +51,20 @@ void	*philo_rout(void *data)
 		if (philo->meals_eaten >= infos->number_of_meals &&
 			infos->number_of_meals > 0)
 			break ;
-		take_a_fork(infos, 'r');
+		if (infos->philos->id % 2 == 0)
+			take_a_fork(infos, 'l');
+		else if (infos->philos->id % 2 != 0)
+			take_a_fork(infos, 'r');
 		if (philo->r_fork)
 			take_a_fork(infos, 'l');
 		if (philo->r_fork && philo->l_fork)
 		{
-			philo->last_meal = time_is_flying_ms();
 			print_action(infos, "is eating", philo->id);
-			ft_usleep(infos->time_to_eat * 1000);
+			ft_usleep(infos->time_to_eat);
 			philo->meals_eaten++;
-			pthread_mutex_unlock(&philo->left_fork->mtx);
-			pthread_mutex_unlock(&philo->right_fork->mtx);
-			print_action(infos, "is sleeping", philo->id);
-			ft_usleep(infos->time_to_sleep * 1000);
-			print_action(infos, "is thinking", philo->id);
-			//usleep(100);
-			if (infos->number_of_meals > 0 && philo->meals_eaten
-				>= infos->number_of_meals)
-				break ;
-			}
+			philo->last_meal = time_is_flying_ms() - infos->start;
+			release_forks_and_sleep(philo);
+		}
 	}
 	return (NULL);
 }
@@ -81,7 +76,8 @@ int	start_simulation(t_infos *infos)
 
 	i = 0;
 	infos->start = time_is_flying_ms();
-	// + (infos->nb_philo * MORE_TIME);
+	if (infos->philos->id % 2 != 0)
+		ft_usleep(infos->time_to_eat);
 	while (i < infos->nb_philo)
 	{
 		if (pthread_create(&infos->philos[i].thread, NULL, &philo_rout,
@@ -101,10 +97,3 @@ int	start_simulation(t_infos *infos)
 	}
 	return (1);
 }
-
-// boucle infini tant qu'aucun philo ne meurt
-/* lancer un monitor qui surveille les philos
-(pret a detecter la mort d'un philo)*/
-// chaque philo tourne dans une boucle
-/*Le mutex de print empêche de mélanger une ligne en deux, mais
-n’impose pas un ordre global croissant des timestamps.*/

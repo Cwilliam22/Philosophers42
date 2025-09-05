@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:07:00 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/04 15:21:22 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/05 17:53:30 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ int	main(int argc, char **argv)
 	infos = init_infos(argv);
 	if (!infos)
 		return (1);
-	//print_arg_struct_infos(infos);
 	if (!start_simulation(infos))
 		return (print_error(RED "Simulation failed" RESET
 				"\n", -1, NULL, 1), 1);
-	clean_all(infos);
+	if (clean_all(infos))
+		return (1);
 	return (0);
 }
 
