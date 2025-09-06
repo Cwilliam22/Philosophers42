@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 17:32:52 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 19:59:19 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	init_forks(t_infos *infos)
 		return (0);
 	while (i < infos->nb_philo)
 	{
+		infos->forks[i].is_taken = 0;
 		if (pthread_mutex_init(&infos->forks[i].mtx, NULL) != 0)
 		{
 			while (--i >= 0)

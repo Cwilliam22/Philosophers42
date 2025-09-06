@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 19:11:42 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 20:00:14 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ static int	all_finish(t_infos *infos)
 static void	one_philo(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->left_fork->mtx);
+	philo->left_fork->is_taken = 1;
 	print_action(philo->infos, "has taken a fork", philo->id);
 	ft_usleep(philo->infos->time_to_die);
 	print_action(philo->infos, "died", philo->id);
+	philo->left_fork->is_taken = 0;
 	pthread_mutex_unlock(&philo->left_fork->mtx);
 	pthread_mutex_lock(&philo->infos->dead_mutex);
 	philo->infos->simulation_stop = 1;

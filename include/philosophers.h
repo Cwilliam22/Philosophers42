@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 18:23:57 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 19:54:23 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@
 
 # define NB_MAX_PHILO 200
 
-# define MORE_TIME 30
+# define MORE_TIME 10
 
 typedef struct s_forks
 {
 	pthread_mutex_t	mtx;
+	int				is_taken;
 }	t_forks;
 
 typedef struct s_philos

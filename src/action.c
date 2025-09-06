@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 19:07:46 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 18:26:18 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 19:58:34 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,31 +24,37 @@ int	take_a_fork(t_philos *philo, char the_fork)
 	if (the_fork == 'l')
 	{
 		pthread_mutex_lock(&philo->left_fork->mtx);
+		philo->left_fork->is_taken = 1;
 		print_action(philo->infos, "has taken a fork", philo->id);
 		pthread_mutex_lock(&philo->infos->dead_mutex);
 		stop = philo->infos->simulation_stop;
 		pthread_mutex_unlock(&philo->infos->dead_mutex);
 		if (stop)
 		{
+			philo->left_fork->is_taken = 0;
 			pthread_mutex_unlock(&philo->left_fork->mtx);
 			return (0);
 		}
 		pthread_mutex_lock(&philo->right_fork->mtx);
+		philo->right_fork->is_taken = 1;
 		print_action(philo->infos, "has taken a fork", philo->id);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->right_fork->mtx);
+		philo->right_fork->is_taken = 1;
 		print_action(philo->infos, "has taken a fork", philo->id);
 		pthread_mutex_lock(&philo->infos->dead_mutex);
 		stop = philo->infos->simulation_stop;
 		pthread_mutex_unlock(&philo->infos->dead_mutex);
 		if (stop)
 		{
+			philo->right_fork->is_taken = 0;
 			pthread_mutex_unlock(&philo->right_fork->mtx);
 			return (0);
 		}
 		pthread_mutex_lock(&philo->left_fork->mtx);
+		philo->left_fork->is_taken = 1;
 		print_action(philo->infos, "has taken a fork", philo->id);
 	}
 	return (1);
@@ -68,9 +74,12 @@ void	eat_this(t_philos *philo)
 
 void	sleep_and_think(t_philos *philo)
 {
+	philo->left_fork->is_taken = 0;
 	pthread_mutex_unlock(&philo->left_fork->mtx);
+	philo->left_fork->is_taken = 0;
 	pthread_mutex_unlock(&philo->right_fork->mtx);
 	print_action(philo->infos, "is sleeping", philo->id);
 	ft_usleep(philo->infos->time_to_sleep);
 	print_action(philo->infos, "is thinking", philo->id);
+	ft_usleep(MORE_TIME);
 }
