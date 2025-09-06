@@ -44,4 +44,13 @@ void	destroy_mutex(t_infos *infos)
 		free(infos->forks);
 		infos->forks = NULL;
 	}
+	if (infos->philos)
+	{
+		i = 0;
+		while (i < infos->nb_philo)
+		{
+			pthread_mutex_destroy(&infos->philos[i].meal_mutex);
+			i++;
+		}
+	}
 }

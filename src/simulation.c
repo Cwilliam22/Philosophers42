@@ -12,21 +12,26 @@
 
 #include "../include/philosophers.h"
 
-static int	all_finish(t_infos *infos)
+static int      all_finish(t_infos *infos)
 {
-	int	i;
+        int                     i;
 
-	i = 0;
-	while (i < infos->nb_philo)
-	{
-		if (infos->philos[i].finish_meals == 0)
-			return (0);
-		i++;
-	}
-	pthread_mutex_lock(&infos->dead_mutex);
-	infos->simulation_stop = 1;
-	pthread_mutex_unlock(&infos->dead_mutex);
-	return (1);
+        i = 0;
+        while (i < infos->nb_philo)
+        {
+                pthread_mutex_lock(&infos->philos[i].meal_mutex);
+                if (infos->philos[i].finish_meals == 0)
+                {
+                        pthread_mutex_unlock(&infos->philos[i].meal_mutex);
+                        return (0);
+                }
+                pthread_mutex_unlock(&infos->philos[i].meal_mutex);
+                i++;
+        }
+        pthread_mutex_lock(&infos->dead_mutex);
+        infos->simulation_stop = 1;
+        pthread_mutex_unlock(&infos->dead_mutex);
+        return (1);
 }
 
 static void	one_philo(t_philos *philo)
@@ -62,11 +67,12 @@ void	*monitor(void *data)
 		{
 			if (all_finish(infos))
 				break ;
+			pthread_mutex_lock(&infos->philos[i].meal_mutex);
 			last_meal = infos->philos[i].last_meal;
 			finish = infos->philos[i].finish_meals;
-			pthread_mutex_unlock(&infos->dead_mutex);
+			pthread_mutex_unlock(&infos->philos[i].meal_mutex);
 			if ((time_is_flying_ms() - last_meal
-					> infos->time_to_die) && !finish)
+				> infos->time_to_die) && !finish)
 			{
 				print_action(infos, "died", infos->philos[i].id);
 				pthread_mutex_lock(&infos->dead_mutex);
@@ -101,7 +107,9 @@ void	*philo_rout(void *data)
 		if (philo->meals_eaten >= philo->infos->number_of_meals
 			&& philo->infos->number_of_meals > 0)
 		{
+			pthread_mutex_lock(&philo->meal_mutex);
 			philo->finish_meals = 1;
+			pthread_mutex_unlock(&philo->meal_mutex);
 			break ;
 		}
 		if (philo->id % 2 == 0)

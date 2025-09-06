@@ -47,6 +47,7 @@ typedef struct s_philos
 	t_forks			*left_fork;
 	t_forks			*right_fork;
 	int				finish_meals;
+	pthread_mutex_t	meal_mutex;
 	struct s_infos	*infos;
 }	t_philos;
 

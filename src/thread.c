@@ -34,7 +34,9 @@ int	create_threads(t_infos *infos)
 	i = 0;
 	while (i < infos->nb_philo)
 	{
+		pthread_mutex_lock(&infos->philos[i].meal_mutex);
 		infos->philos[i].last_meal = infos->start;
+		pthread_mutex_unlock(&infos->philos[i].meal_mutex);
 		if (pthread_create(&infos->philos[i].thread, NULL, &philo_rout,
 				&infos->philos[i]) != 0)
 		{
