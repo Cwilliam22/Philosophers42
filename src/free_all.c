@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:11:58 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 17:29:23 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 18:22:49 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	clean_all(t_infos *infos)
 		return (0);
 	destroy_mutex(infos);
 	pthread_mutex_destroy(&infos->print_mutex);
+	pthread_mutex_destroy(&infos->dead_mutex);
 	if (infos->philos)
 	{
 		free(infos->philos);

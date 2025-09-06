@@ -6,13 +6,13 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 19:07:46 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 17:25:59 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 18:26:18 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-void	take_a_fork(t_philos *philo, char the_fork)
+int	take_a_fork(t_philos *philo, char the_fork)
 {
 	int	stop;
 
@@ -20,7 +20,7 @@ void	take_a_fork(t_philos *philo, char the_fork)
 	stop = philo->infos->simulation_stop;
 	pthread_mutex_unlock(&philo->infos->dead_mutex);
 	if (stop)
-		return ;
+		return (0);
 	if (the_fork == 'l')
 	{
 		pthread_mutex_lock(&philo->left_fork->mtx);
@@ -31,7 +31,7 @@ void	take_a_fork(t_philos *philo, char the_fork)
 		if (stop)
 		{
 			pthread_mutex_unlock(&philo->left_fork->mtx);
-			return ;
+			return (0);
 		}
 		pthread_mutex_lock(&philo->right_fork->mtx);
 		print_action(philo->infos, "has taken a fork", philo->id);
@@ -46,17 +46,17 @@ void	take_a_fork(t_philos *philo, char the_fork)
 		if (stop)
 		{
 			pthread_mutex_unlock(&philo->right_fork->mtx);
-			return ;
+			return (0);
 		}
 		pthread_mutex_lock(&philo->left_fork->mtx);
 		print_action(philo->infos, "has taken a fork", philo->id);
 	}
+	return (1);
 }
 
 void	eat_this(t_philos *philo)
 {
 	print_action(philo->infos, "is eating", philo->id);
-
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal = time_is_flying_ms();
 	pthread_mutex_unlock(&philo->meal_mutex);

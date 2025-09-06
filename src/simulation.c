@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 17:44:10 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 19:11:42 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,11 @@ void	*philo_rout(void *data)
 {
 	t_philos	*philo;
 	int			stop;
+	int			forks;
 
 	philo = (t_philos *)data;
 	while (time_is_flying_ms() < philo->infos->start)
-		ft_usleep(100);
+		ft_usleep(10);
 	if (philo->infos->nb_philo == 1)
 		return (one_philo(philo), NULL);
 	while (1)
@@ -104,20 +105,24 @@ void	*philo_rout(void *data)
 		pthread_mutex_unlock(&philo->infos->dead_mutex);
 		if (stop)
 			break ;
+		pthread_mutex_lock(&philo->meal_mutex);
 		if (philo->meals_eaten >= philo->infos->number_of_meals
 			&& philo->infos->number_of_meals > 0)
 		{
-			pthread_mutex_lock(&philo->meal_mutex);
 			philo->finish_meals = 1;
 			pthread_mutex_unlock(&philo->meal_mutex);
 			break ;
 		}
+		pthread_mutex_unlock(&philo->meal_mutex);
 		if (philo->id % 2 == 0)
-			take_a_fork(philo, 'l');
+			forks = take_a_fork(philo, 'l');
 		else
-			take_a_fork(philo, 'r');
-		eat_this(philo);
-		sleep_and_think(philo);
+			forks = take_a_fork(philo, 'r');
+		if (forks)
+		{
+			eat_this(philo);
+			sleep_and_think(philo);
+		}
 	}
 	return (NULL);
 }

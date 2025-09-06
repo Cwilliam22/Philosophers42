@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 17:21:05 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 18:23:57 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_infos
 // main.c
 
 // action.c
-void		take_a_fork(t_philos *philo, char the_fork);
+int			take_a_fork(t_philos *philo, char the_fork);
 void		eat_this(t_philos *philo);
 void		sleep_and_think(t_philos *philo);
 
