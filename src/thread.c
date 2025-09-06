@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 15:19:20 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 15:19:23 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 15:35:46 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ int	cleanup_threads(t_infos *infos, int num_thread)
 	int	i;
 	int	j;
 
+	pthread_mutex_lock(&infos->dead_mutex);
 	infos->simulation_stop = 1;
+	pthread_mutex_unlock(&infos->dead_mutex);
 	i = 0;
 	while (i < num_thread)
 	{
