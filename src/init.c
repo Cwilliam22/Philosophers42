@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 13:34:02 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 15:30:46 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ t_infos	*init_infos(char **argv)
 	else
 		infos->number_of_meals = -1;
 	if (pthread_mutex_init(&infos->print_mutex, NULL) != 0)
+		return (free(infos), NULL);
+	if (pthread_mutex_init(&infos->dead_mutex, NULL) != 0)
 		return (free(infos), NULL);
 	if (!init_forks(infos))
 		return (free(infos), NULL);
@@ -55,7 +57,6 @@ int	init_forks(t_infos *infos)
 			free(infos->forks);
 			return (0);
 		}
-		infos->forks[i].used = 0;
 		i++;
 	}
 	return (1);

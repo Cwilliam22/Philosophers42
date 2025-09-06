@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 13:34:34 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 15:27:34 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@
 typedef struct s_forks
 {
 	pthread_mutex_t	mtx;
-	int				used;
 }	t_forks;
 
 typedef struct s_philos
@@ -47,7 +46,6 @@ typedef struct s_philos
 	pthread_t		thread;
 	t_forks			*left_fork;
 	t_forks			*right_fork;
-	int				is_dead;
 	int				finish_meals;
 	struct s_infos	*infos;
 }	t_philos;
@@ -71,39 +69,39 @@ typedef struct s_infos
 
 // main.c
 
-// parse.c
-int			parse(char **argv);
+// action.c
+void		take_a_fork(t_philos *philo, char the_fork);
+void		eat_this(t_philos *philo);
+void		sleep_and_think(t_philos *philo);
+
+// free_all.c
+int			clean_all(t_infos *infos);
+void		destroy_mutex(t_infos *infos);
 
 // init.c
 t_infos		*init_infos(char **argv);
 int			init_forks(t_infos *infos);
 int			init_philos(t_infos *infos);
 
-// utils.c
-void		print_error(char *begin, int i, char *end, int out);
-void		print_action(t_infos *infos, char *todo, int id);
-
-// time.c
-void		ft_usleep(long long time);
-long long	time_is_flying_ms(void);
+// parse.c
+int			parse(char **argv);
 
 // simulation.c
 int			start_simulation(t_infos *infos);
 void		*monitor(void *data);
 void		*philo_rout(void *data);
 
-// free_all.c
-int			clean_all(t_infos *infos);
-void		destroy_mutex(t_infos *infos);
-
-// action.c
-void		take_a_fork(t_philos *philo, char the_fork);
-void		eat_this(t_philos *philo);
-void		sleep_and_think(t_philos *philo);
-
 // thread.c
 int			join_threads(t_infos *infos);
 int			create_threads(t_infos *infos);
 int			cleanup_threads(t_infos *infos, int num_thread);
+
+// time.c
+void		ft_usleep(long long time);
+long long	time_is_flying_ms(void);
+
+// utils.c
+void		print_error(char *begin, int i, char *end, int out);
+void		print_action(t_infos *infos, char *todo, int id);
 
 #endif

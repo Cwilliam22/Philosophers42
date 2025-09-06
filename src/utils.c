@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 13:05:13 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 15:24:34 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,3 @@ void	print_action(t_infos *infos, char *todo, int id)
 			"%s\n", time, id + 1, todo);
 	pthread_mutex_unlock(&infos->print_mutex);
 }
-
-/*
-int	philo_is_dead(t_infos *infos)
-{
-	int	i;
-
-	i = 0;
-	while (i < infos->nb_philo)
-	{
-		if (infos->philos[i].is_dead)
-			return (0);
-		i++;
-	}
-	return (1);
-}
-*/

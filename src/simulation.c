@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 13:41:56 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 15:19:57 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ void	*monitor(void *data)
 			{
 				print_action(infos, "died", infos->philos[i].id);
 				infos->simulation_stop = 1;
-				break;
+				break ;
 			}
 			i++;
 		}
-		ft_usleep(1000);
+		ft_usleep(1);
 	}
 	return (NULL);
 }
@@ -102,6 +102,6 @@ int	start_simulation(t_infos *infos)
 		print_error(RED "Fail to creat thread for the monitor" RESET
 			"\n", -1, NULL, 2);
 		return (0);
-	};
+	}
 	return (1);
 }
