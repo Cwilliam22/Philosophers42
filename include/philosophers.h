@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 19:54:23 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 21:37:31 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ typedef struct s_infos
 
 // action.c
 int			take_a_fork(t_philos *philo, char the_fork);
+int			take_right_fork(t_philos *philo, int stop);
+int			take_left_fork(t_philos *philo, int stop);
 void		eat_this(t_philos *philo);
 void		sleep_and_think(t_philos *philo);
 
@@ -84,6 +86,7 @@ void		destroy_mutex(t_infos *infos);
 t_infos		*init_infos(char **argv);
 int			init_forks(t_infos *infos);
 int			init_philos(t_infos *infos);
+int			init_mutex_meal_or_destroy(t_philos	*philo, int i);
 
 // parse.c
 int			parse(char **argv);

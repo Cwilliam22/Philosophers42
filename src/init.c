@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 19:59:19 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 21:37:38 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,21 @@ int	init_forks(t_infos *infos)
 	return (1);
 }
 
+int	init_mutex_meal_or_destroy(t_philos	*philo, int i)
+{
+	t_infos	*infos;
+
+	infos = philo->infos;
+	if (pthread_mutex_init(&philo->meal_mutex, NULL) != 0)
+	{
+		while (--i >= 0)
+			pthread_mutex_destroy(&infos->philos[i].meal_mutex);
+		free(infos->philos);
+		return (0);
+	}
+	return (1);
+}
+
 int	init_philos(t_infos *infos)
 {
 	int			i;
@@ -82,13 +97,8 @@ int	init_philos(t_infos *infos)
 		philo->meals_eaten = 0;
 		philo->finish_meals = 0;
 		philo->last_meal = 0;
-		if (pthread_mutex_init(&philo->meal_mutex, NULL) != 0)
-		{
-			while (--i >= 0)
-				pthread_mutex_destroy(&infos->philos[i].meal_mutex);
-			free(infos->philos);
+		if (!init_mutex_meal_or_destroy(philo, i))
 			return (0);
-		}
 		i++;
 	}
 	return (1);
