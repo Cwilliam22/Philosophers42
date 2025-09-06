@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 18:12:40 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 13:18:57 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 23:09:45 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	ft_usleep(long long time)
 	long long	start;
 
 	start = time_is_flying_ms();
-	while (time_is_flying_ms() - start < time)
-		usleep(10);
+    while (time_is_flying_ms() - start + 5 < time)
+        usleep(100);
+    while (time_is_flying_ms() - start < time)
+        usleep(10);
 }

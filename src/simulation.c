@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 20:00:14 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 23:08:32 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,13 @@ void	*philo_rout(void *data)
 	int			forks;
 
 	philo = (t_philos *)data;
-	while (time_is_flying_ms() < philo->infos->start)
-		ft_usleep(10);
-	if (philo->infos->nb_philo == 1)
-		return (one_philo(philo), NULL);
-	while (1)
+    while (time_is_flying_ms() < philo->infos->start)
+        ft_usleep(10);
+    if (philo->id % 2 != 0)
+        ft_usleep(philo->infos->time_to_eat / 2);
+    if (philo->infos->nb_philo == 1)
+        return (one_philo(philo), NULL);
+    while (1)
 	{
 		pthread_mutex_lock(&philo->infos->dead_mutex);
 		stop = philo->infos->simulation_stop;
