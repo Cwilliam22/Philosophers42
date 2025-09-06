@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:11:58 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 13:30:14 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 17:29:23 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,14 @@ void	destroy_mutex(t_infos *infos)
 		}
 		free(infos->forks);
 		infos->forks = NULL;
+	}
+	if (infos->philos)
+	{
+		i = 0;
+		while (i < infos->nb_philo)
+		{
+			pthread_mutex_destroy(&infos->philos[i].meal_mutex);
+			i++;
+		}
 	}
 }

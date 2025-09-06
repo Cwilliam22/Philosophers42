@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 15:30:46 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 17:32:52 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,13 @@ int	init_philos(t_infos *infos)
 		philo->meals_eaten = 0;
 		philo->finish_meals = 0;
 		philo->last_meal = 0;
+		if (pthread_mutex_init(&philo->meal_mutex, NULL) != 0)
+		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&infos->philos[i].meal_mutex);
+			free(infos->philos);
+			return (0);
+		}
 		i++;
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 15:27:34 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 17:21:05 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_philos
 	t_forks			*left_fork;
 	t_forks			*right_fork;
 	int				finish_meals;
+	pthread_mutex_t	meal_mutex;
 	struct s_infos	*infos;
 }	t_philos;
 

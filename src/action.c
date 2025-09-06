@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 19:07:46 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 16:38:23 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 17:25:59 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,14 @@ void	take_a_fork(t_philos *philo, char the_fork)
 void	eat_this(t_philos *philo)
 {
 	print_action(philo->infos, "is eating", philo->id);
+
+	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal = time_is_flying_ms();
+	pthread_mutex_unlock(&philo->meal_mutex);
 	ft_usleep(philo->infos->time_to_eat);
+	pthread_mutex_lock(&philo->meal_mutex);
 	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->meal_mutex);
 }
 
 void	sleep_and_think(t_philos *philo)

@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 15:19:20 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 15:35:46 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 17:34:52 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	create_threads(t_infos *infos)
 	i = 0;
 	while (i < infos->nb_philo)
 	{
+		pthread_mutex_lock(&infos->philos[i].meal_mutex);
 		infos->philos[i].last_meal = infos->start;
+		pthread_mutex_unlock(&infos->philos[i].meal_mutex);
 		if (pthread_create(&infos->philos[i].thread, NULL, &philo_rout,
 				&infos->philos[i]) != 0)
 		{
