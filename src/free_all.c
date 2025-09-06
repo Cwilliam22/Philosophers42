@@ -6,32 +6,17 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:11:58 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 20:15:08 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 13:30:14 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-int	wait_before_destroy(t_infos *infos)
-{
-	int	i;
-
-	i = 0;
-	while (i < infos->nb_philo)
-	{
-		if (pthread_join(infos->philos[i].thread, NULL) != 0)
-			return (0);
-		i++;
-	}
-	pthread_join(infos->monitor_thread, NULL);
-	return (1);
-}
-
 int	clean_all(t_infos *infos)
 {
 	if (!infos)
 		return (0);
-	if (!wait_before_destroy(infos))
+	if (!join_threads(infos))
 		return (0);
 	destroy_mutex(infos);
 	pthread_mutex_destroy(&infos->print_mutex);

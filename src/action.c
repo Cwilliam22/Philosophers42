@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 19:07:46 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 20:10:28 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 13:30:38 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,17 @@
 
 void	take_a_fork(t_philos *philo, char the_fork)
 {
+	if (philo->infos->simulation_stop)
+		return ;
 	if (the_fork == 'l')
 	{
 		pthread_mutex_lock(&philo->left_fork->mtx);
 		print_action(philo->infos, "has taken a fork", philo->id);
+		if (philo->infos->simulation_stop)
+		{
+			pthread_mutex_unlock(&philo->left_fork->mtx);
+			return ;
+		}
 		pthread_mutex_lock(&philo->right_fork->mtx);
 		print_action(philo->infos, "has taken a fork", philo->id);
 	}
@@ -25,6 +32,11 @@ void	take_a_fork(t_philos *philo, char the_fork)
 	{
 		pthread_mutex_lock(&philo->right_fork->mtx);
 		print_action(philo->infos, "has taken a fork", philo->id);
+		if (philo->infos->simulation_stop)
+		{
+			pthread_mutex_unlock(&philo->right_fork->mtx);
+			return ;
+		}
 		pthread_mutex_lock(&philo->left_fork->mtx);
 		print_action(philo->infos, "has taken a fork", philo->id);
 	}

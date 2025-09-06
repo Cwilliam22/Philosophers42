@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:08:50 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 19:49:38 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 13:34:02 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ int	init_philos(t_infos *infos)
 	while (i < infos->nb_philo)
 	{
 		philo = &infos->philos[i];
-		philo->id = i + 1;
+		philo->id = i;
 		philo->infos = infos;
 		philo->left_fork = &infos->forks[i];
 		philo->right_fork = &infos->forks[(i + 1) % infos->nb_philo];
-		philo->l_fork = 0;
-		philo->r_fork = 0;
 		philo->meals_eaten = 0;
+		philo->finish_meals = 0;
+		philo->last_meal = 0;
 		i++;
 	}
 	return (1);

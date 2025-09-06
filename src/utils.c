@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 20:21:26 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 13:05:13 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,22 @@ void	print_action(t_infos *infos, char *todo, int id)
 	pthread_mutex_lock(&infos->print_mutex);
 	if (!infos->simulation_stop || (todo && !ft_strcmp(todo, "died")))
 		printf(NAVY "%lld [ms] " RESET "Philo " BLUE "%d " RESET
-			"%s\n", time, id, todo);
+			"%s\n", time, id + 1, todo);
 	pthread_mutex_unlock(&infos->print_mutex);
 }
+
+/*
+int	philo_is_dead(t_infos *infos)
+{
+	int	i;
+
+	i = 0;
+	while (i < infos->nb_philo)
+	{
+		if (infos->philos[i].is_dead)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+*/

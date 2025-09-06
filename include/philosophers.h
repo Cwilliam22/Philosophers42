@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 20:13:36 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 13:34:34 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ typedef struct s_philos
 	pthread_t		thread;
 	t_forks			*left_fork;
 	t_forks			*right_fork;
-	int				l_fork;
-	int				r_fork;
+	int				is_dead;
+	int				finish_meals;
 	struct s_infos	*infos;
 }	t_philos;
 
@@ -64,6 +64,7 @@ typedef struct s_infos
 	t_philos		*philos;
 	t_forks			*forks;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	dead_mutex;
 	int				simulation_stop;
 	pthread_t		monitor_thread;
 }	t_infos;
@@ -80,24 +81,29 @@ int			init_philos(t_infos *infos);
 
 // utils.c
 void		print_error(char *begin, int i, char *end, int out);
-long long	time_is_flying_ms(void);
 void		print_action(t_infos *infos, char *todo, int id);
+
+// time.c
 void		ft_usleep(long long time);
-void		take_a_fork(t_philos *philos, char the_fork);
+long long	time_is_flying_ms(void);
 
 // simulation.c
 int			start_simulation(t_infos *infos);
 void		*monitor(void *data);
+void		*philo_rout(void *data);
 
 // free_all.c
 int			clean_all(t_infos *infos);
 void		destroy_mutex(t_infos *infos);
-int			wait_before_destroy(t_infos *infos);
 
 // action.c
 void		take_a_fork(t_philos *philo, char the_fork);
 void		eat_this(t_philos *philo);
 void		sleep_and_think(t_philos *philo);
 
+// thread.c
+int			join_threads(t_infos *infos);
+int			create_threads(t_infos *infos);
+int			cleanup_threads(t_infos *infos, int num_thread);
 
 #endif

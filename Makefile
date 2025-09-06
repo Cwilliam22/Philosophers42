@@ -6,7 +6,7 @@
 #    By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 11:49:11 by wcapt             #+#    #+#              #
-#    Updated: 2025/09/05 19:23:19 by wcapt            ###   ########.fr        #
+#    Updated: 2025/09/06 10:56:15 by wcapt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ SRCS =  $(SRCDIR)/main.c \
 		$(SRCDIR)/utils.c \
 		$(SRCDIR)/simulation.c \
 		$(SRCDIR)/time.c \
+		$(SRCDIR)/thread.c \
 		$(SRCDIR)/action.c
 
 # Object files (préserve l'arborescence sous src/)

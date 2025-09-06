@@ -6,7 +6,7 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 18:12:40 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/05 20:21:03 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/06 13:18:57 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,5 @@ void	ft_usleep(long long time)
 
 	start = time_is_flying_ms();
 	while (time_is_flying_ms() - start < time)
-		usleep(100);
+		usleep(10);
 }
