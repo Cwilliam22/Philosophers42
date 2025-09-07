@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/07 10:01:20 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/07 19:47:21 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,6 @@ int	all_finish(t_infos *infos)
 	return (1);
 }
 
-static void	one_philo(t_philos *philo)
-{
-	pthread_mutex_lock(&philo->left_fork->mtx);
-	philo->left_fork->is_taken = 1;
-	print_action(philo->infos, "has taken a fork", philo->id);
-	ft_usleep(philo->infos->time_to_die);
-	print_action(philo->infos, "died", philo->id);
-	philo->left_fork->is_taken = 0;
-	pthread_mutex_unlock(&philo->left_fork->mtx);
-	pthread_mutex_lock(&philo->infos->dead_mutex);
-	philo->infos->simulation_stop = 1;
-	pthread_mutex_unlock(&philo->infos->dead_mutex);
-}
-
 int	look_at_meal(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->meal_mutex);
@@ -71,9 +57,9 @@ int	routine(t_philos *philo)
 	stop = philo->infos->simulation_stop;
 	pthread_mutex_unlock(&philo->infos->dead_mutex);
 	if (stop)
-		return (0) ;
+		return (0);
 	if (!look_at_meal(philo))
-		return (0) ;
+		return (0);
 	if (philo->id % 2 == 0)
 		forks = take_a_fork(philo, 'l');
 	else
@@ -91,16 +77,16 @@ void	*philo_routine(void *data)
 	t_philos	*philo;
 
 	philo = (t_philos *)data;
-    while (time_is_flying_ms() < philo->infos->start)
-        ft_usleep(10);
-    if (philo->id % 2 != 0)
-        ft_usleep(philo->infos->time_to_eat / 2);
-    if (philo->infos->nb_philo == 1)
-        return (one_philo(philo), NULL);
-    while (1)
+	while (time_is_flying_ms() < philo->infos->start)
+		ft_usleep(10);
+	if (philo->id % 2 != 0)
+		ft_usleep(philo->infos->time_to_eat / 2);
+	if (philo->infos->nb_philo == 1)
+		return (one_philo(philo), NULL);
+	while (1)
 	{
 		if (!routine(philo))
-			break;
+			break ;
 	}
 	return (NULL);
 }

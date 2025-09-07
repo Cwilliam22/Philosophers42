@@ -6,11 +6,25 @@
 /*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:12:18 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 16:41:51 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/07 19:46:12 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+
+void	one_philo(t_philos *philo)
+{
+	pthread_mutex_lock(&philo->left_fork->mtx);
+	philo->left_fork->is_taken = 1;
+	print_action(philo->infos, "has taken a fork", philo->id);
+	ft_usleep(philo->infos->time_to_die);
+	print_action(philo->infos, "died", philo->id);
+	philo->left_fork->is_taken = 0;
+	pthread_mutex_unlock(&philo->left_fork->mtx);
+	pthread_mutex_lock(&philo->infos->dead_mutex);
+	philo->infos->simulation_stop = 1;
+	pthread_mutex_unlock(&philo->infos->dead_mutex);
+}
 
 static	char	*join_and_free(char *str1, char *str2)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/07 10:01:35 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/07 19:46:53 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,5 +111,6 @@ long long	time_is_flying_ms(void);
 // utils.c
 void		print_error(char *begin, int i, char *end, int out);
 void		print_action(t_infos *infos, char *todo, int id);
+void		one_philo(t_philos *philo);
 
 #endif
