@@ -6,13 +6,13 @@
 /*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 19:15:26 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 23:08:32 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/07 10:01:20 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-static int	all_finish(t_infos *infos)
+int	all_finish(t_infos *infos)
 {
 	int	i;
 
@@ -48,52 +48,47 @@ static void	one_philo(t_philos *philo)
 	pthread_mutex_unlock(&philo->infos->dead_mutex);
 }
 
-void	*monitor(void *data)
+int	look_at_meal(t_philos *philo)
 {
-	t_infos		*infos;
-	int			i;
-	int			stop;
-	long long	last_meal;
-	int			finish;
-
-	infos = (t_infos *)data;
-	while (1)
+	pthread_mutex_lock(&philo->meal_mutex);
+	if (philo->meals_eaten >= philo->infos->number_of_meals
+		&& philo->infos->number_of_meals > 0)
 	{
-		i = 0;
-		pthread_mutex_lock(&infos->dead_mutex);
-		stop = infos->simulation_stop;
-		pthread_mutex_unlock(&infos->dead_mutex);
-		if (stop)
-			break ;
-		while (i < infos->nb_philo)
-		{
-			if (all_finish(infos))
-				break ;
-			pthread_mutex_lock(&infos->philos[i].meal_mutex);
-			last_meal = infos->philos[i].last_meal;
-			finish = infos->philos[i].finish_meals;
-			pthread_mutex_unlock(&infos->philos[i].meal_mutex);
-			if ((time_is_flying_ms() - last_meal
-					> infos->time_to_die) && !finish)
-			{
-				print_action(infos, "died", infos->philos[i].id);
-				pthread_mutex_lock(&infos->dead_mutex);
-				infos->simulation_stop = 1;
-				pthread_mutex_unlock(&infos->dead_mutex);
-				break ;
-			}
-			i++;
-		}
-		ft_usleep(1);
+		philo->finish_meals = 1;
+		pthread_mutex_unlock(&philo->meal_mutex);
+		return (0);
 	}
-	return (NULL);
+	pthread_mutex_unlock(&philo->meal_mutex);
+	return (1);
 }
 
-void	*philo_rout(void *data)
+int	routine(t_philos *philo)
+{
+	int	stop;
+	int	forks;
+
+	pthread_mutex_lock(&philo->infos->dead_mutex);
+	stop = philo->infos->simulation_stop;
+	pthread_mutex_unlock(&philo->infos->dead_mutex);
+	if (stop)
+		return (0) ;
+	if (!look_at_meal(philo))
+		return (0) ;
+	if (philo->id % 2 == 0)
+		forks = take_a_fork(philo, 'l');
+	else
+		forks = take_a_fork(philo, 'r');
+	if (forks)
+	{
+		eat_this(philo);
+		sleep_and_think(philo);
+	}
+	return (1);
+}
+
+void	*philo_routine(void *data)
 {
 	t_philos	*philo;
-	int			stop;
-	int			forks;
 
 	philo = (t_philos *)data;
     while (time_is_flying_ms() < philo->infos->start)
@@ -104,29 +99,8 @@ void	*philo_rout(void *data)
         return (one_philo(philo), NULL);
     while (1)
 	{
-		pthread_mutex_lock(&philo->infos->dead_mutex);
-		stop = philo->infos->simulation_stop;
-		pthread_mutex_unlock(&philo->infos->dead_mutex);
-		if (stop)
-			break ;
-		pthread_mutex_lock(&philo->meal_mutex);
-		if (philo->meals_eaten >= philo->infos->number_of_meals
-			&& philo->infos->number_of_meals > 0)
-		{
-			philo->finish_meals = 1;
-			pthread_mutex_unlock(&philo->meal_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&philo->meal_mutex);
-		if (philo->id % 2 == 0)
-			forks = take_a_fork(philo, 'l');
-		else
-			forks = take_a_fork(philo, 'r');
-		if (forks)
-		{
-			eat_this(philo);
-			sleep_and_think(philo);
-		}
+		if (!routine(philo))
+			break;
 	}
 	return (NULL);
 }

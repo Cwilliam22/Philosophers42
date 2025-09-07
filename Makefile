@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+         #
+#    By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 11:49:11 by wcapt             #+#    #+#              #
-#    Updated: 2025/09/06 10:56:15 by wcapt            ###   ########.fr        #
+#    Updated: 2025/09/07 10:00:45 by wcapt            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRCS =  $(SRCDIR)/main.c \
 		$(SRCDIR)/simulation.c \
 		$(SRCDIR)/time.c \
 		$(SRCDIR)/thread.c \
+		$(SRCDIR)/monitoring.c \
 		$(SRCDIR)/action.c
 
 # Object files (préserve l'arborescence sous src/)

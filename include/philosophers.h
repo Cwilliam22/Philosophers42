@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wcapt < wcapt@student.42lausanne.ch >      +#+  +:+       +#+        */
+/*   By: wcapt <wcapt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:45:13 by wcapt             #+#    #+#             */
-/*   Updated: 2025/09/06 21:37:31 by wcapt            ###   ########.fr       */
+/*   Updated: 2025/09/07 10:01:35 by wcapt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,16 @@ int			init_forks(t_infos *infos);
 int			init_philos(t_infos *infos);
 int			init_mutex_meal_or_destroy(t_philos	*philo, int i);
 
+// monitoring .c
+void		*monitor(void *data);
+
 // parse.c
 int			parse(char **argv);
 
 // simulation.c
 int			start_simulation(t_infos *infos);
-void		*monitor(void *data);
-void		*philo_rout(void *data);
+void		*philo_routine(void *data);
+int			all_finish(t_infos *infos);
 
 // thread.c
 int			join_threads(t_infos *infos);
